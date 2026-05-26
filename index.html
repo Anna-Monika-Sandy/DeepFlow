@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>DeepFlow — Underwater Meditation</title>
+  <meta name="description" content="Immersive underwater meditation experience" />
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <!-- aframe-extras: WASD-movement and look-controls -->
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <a-scene fog="type: exponential; color: #08506b; density: 0.025" background="color: #0a3d5c">
+    <a-assets>
+      <video id="underwater-video" src="assets/video/underwater.mp4" autoplay loop muted playsinline>
+      </video>
+      <!-- autoplay + muted + playsinline — for start without user interaction (browser autoplay policy). -->
+    </a-assets>
+
+    <!-- geometry="ellipsoid; radius: 50" -->
+    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false"
+      follow-player="y: 0">
+
+    </a-videosphere>
+
+
+    <!-- test element -->
+    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+
+    <!-- Marine snow — взвесь в воде, рендерится поверх видео -->
+    <a-entity marine-snow="speed: 0.1"></a-entity>
+
+    <!-- player -->
+    <a-entity id="player" position="0 1.6 0" wasd-controls="acceleration: 30" look-controls
+      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
+      <a-entity camera></a-entity>
+    </a-entity>
+
+
+    <!-- ============================================================ -->
+    <!-- СТАРАЯ ВЕРСИЯ (без видео) — закомментирована                  -->
+    <!-- Чтобы вернуть: вынуть эти элементы из комментария             -->
+    <!-- и закомментировать блок с <a-videosphere> и <a-assets> выше   -->
+    <!-- ============================================================ -->
+
+    <!--
+    Небо
+    <a-sky color="#08293f"></a-sky>
+
+    Поверхность воды круглая
+    <a-circle position="0 20 0" rotation="90 0 0" radius="50" color="#4a9eb8" opacity="0.6"
+      material="side: double; transparent: true">
+    </a-circle>
+
+    God rays
+    <a-cone position="-5 10 -8" rotation="0 0 5" radius-top="0.2" radius-bottom="3" height="25" color="#ffffff"
+      material="transparent: true; opacity: 0.05; blending: additive; depthWrite: false; side: double">
+    </a-cone>
+    <a-cone position="6 10 -5" rotation="0 0 -8" radius-top="0.15" radius-bottom="2.5" height="25" color="#eaf6ff"
+      material="transparent: true; opacity: 0.04; blending: additive; depthWrite: false; side: double">
+    </a-cone>
+    <a-cone position="-2 10 4" rotation="3 0 -4" radius-top="0.25" radius-bottom="3.5" height="25" color="#ffffff"
+      material="transparent: true; opacity: 0.035; blending: additive; depthWrite: false; side: double">
+    </a-cone>
+    <a-cone position="3 10 7" rotation="-2 0 6" radius-top="0.2" radius-bottom="2" height="25" color="#eaf6ff"
+      material="transparent: true; opacity: 0.06; blending: additive; depthWrite: false; side: double">
+    </a-cone>
+    -->
+
+  </a-scene>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
