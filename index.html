@@ -26,14 +26,19 @@
 
     </a-videosphere>
 
-
-    <!-- test element -->
-    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-
     <!-- rock tunnel — covers the video seam at the back -->
-    <a-gltf-model src="assets/models/underwater_rock_tunnel.glb" position="-16.39 -23.98 -3.138" rotation="3.865 -74.34 -5.995" scale="0.1 0.1 0.1"></a-gltf-model>
+    <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
+      rotation="-4.282 63.800 0.584" scale="2 2 2.467"></a-gltf-model>
+    <a-gltf-model id="rock" src="assets/models/beach_rock.glb" position="-28.08 -12.64 4.625"
+      rotation="-4.282 63.163 0.584" scale="103.77 97.524 117.80"></a-gltf-model>
+    <a-gltf-model id="pier" src="assets/models/pier.glb" position="-31.58 13.940 -1.893" rotation="-19.33 89.772 1.954"
+      scale="1 1 1.2"></a-gltf-model>
+    <a-gltf-model id="beach" src="assets/models/layered_beach_rock.glb" position="-32.27 -21.38 -6.743"
+      rotation="-4.537 81.746 13.566" scale="100 220.34 100"></a-gltf-model>
+    <a-gltf-model id="covered_rock" src="assets/models/coral_covered_rock..glb" position="-21.90 -9.131 -21.05"
+      rotation="0 40.761 0" scale="0.090 0.050 0.060"></a-gltf-model>
 
-    <!-- Marine snow — взвесь в воде, рендерится поверх видео -->
+
     <a-entity marine-snow="speed: 0.1"></a-entity>
 
     <!-- player -->
