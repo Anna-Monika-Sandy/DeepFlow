@@ -2,4 +2,5 @@
 registerSwimBob();
 registerMarineSnow();
 registerBoundaryClamp();
+registerFishSchool();
 initVideo();
