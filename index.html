@@ -10,6 +10,14 @@
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Move scripts to the head so components register before <a-scene> is parsed -->
+  <script src="js/swim-bob.js"></script>
+  <script src="js/marine-snow.js"></script>
+  <script src="js/boundary-clamp.js"></script>
+  <script src="js/fish.js"></script>
+  <script src="js/video.js"></script>
+  <script src="js/main.js"></script>
 </head>
 
 <body>
@@ -18,15 +26,22 @@
     <a-assets>
       <video id="underwater-video" src="assets/video/underwater.mp4" autoplay loop muted playsinline>
       </video>
-      <!-- autoplay + muted + playsinline — for start without user interaction (browser autoplay policy). -->
+      <!-- Fish models -->
+      <a-asset-item id="emperor-fish" src="assets/models/emperor_angelfish_update_v2.glb"></a-asset-item>
+      <a-asset-item id="manta-ray" src="assets/models/manta_ray_birostris_animated.glb"></a-asset-item>
+      <a-asset-item id="fish-school" src="assets/models/animated_swimming_tropical_fish_school_loop.glb"></a-asset-item>
+      <a-asset-item id="tuna-fish" src="assets/models/animated_tuna__3d_animal_model.glb"></a-asset-item>
+      <a-asset-item id="orca" src="assets/models/female_orca.glb"></a-asset-item>
+      <a-asset-item id="fish" src="assets/models/fish.glb"></a-asset-item>
+
+
     </a-assets>
 
-    <!-- geometry="ellipsoid; radius: 50" -->
+    <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
-
     </a-videosphere>
 
-    <!-- rock tunnel — covers the video seam at the back -->
+    <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
       rotation="-4.282 63.800 0.584" scale="2 2 2.467"></a-gltf-model>
     <a-gltf-model id="rock" src="assets/models/beach_rock.glb" position="-28.08 -12.64 4.625"
@@ -38,22 +53,46 @@
     <a-gltf-model id="covered_rock" src="assets/models/coral_covered_rock..glb" position="-21.90 -9.131 -21.05"
       rotation="0 40.761 0" scale="0.090 0.050 0.060"></a-gltf-model>
 
-
+    <!-- Marine snow (plankton) -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
 
-    <!-- player -->
+
+    <!-- 
+      1. TROPICAL FISH SCHOOL (SPLIT AND MULTIPLIED)
+      Loads the school GLB containing multiple fish, splits them up entirely,
+      and uses a multiplier of 4 to generate dozens of separate, independent fish.
+    -->
+    <a-entity
+      school-splitter="model: #fish-school; multiplier: 10; boundary: 25; minSpeed: 2.0; maxSpeed: 4.5; scale: 1.2"></a-entity>
+
+    <!-- 
+      2. EMPEROR ANGELFISH SPAWNER
+      Spawns 25 individual Emperor Angelfish swimming independently throughout the space.
+    -->
+    <a-entity
+      gltf-fish-spawner="model: #emperor-fish; count: 25; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
+
+    <!-- 
+      3. MANTA RAY SPAWNER
+      Spawns 8 large, slow, gliding Manta Rays at depth.
+    -->
+    <a-entity
+      gltf-fish-spawner="model: #manta-ray; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
+
+    <a-entity
+      gltf-fish-spawner="model: #tuna-fish; count: 10; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
+
+    <a-entity gltf-fish-spawner="model: #orca; count: 1; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
+    <a-entity gltf-fish-spawner="model: #fish; count: 100; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
+
+
+    <!-- Player -->
     <a-entity id="player" position="0 1.6 0" wasd-controls="acceleration: 30" look-controls
       swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
-      <a-entity camera></a-entity>
+      <a-camera></a-camera>
     </a-entity>
 
   </a-scene>
-
-  <script src="js/swim-bob.js"></script>
-  <script src="js/marine-snow.js"></script>
-  <script src="js/boundary-clamp.js"></script>
-  <script src="js/video.js"></script>
-  <script src="js/main.js"></script>
 </body>
 
 </html>
