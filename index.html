@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>DeepFlow — Underwater Meditation</title>
+  <meta name="description" content="Immersive underwater meditation experience" />
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <!-- aframe-extras: WASD-movement and look-controls -->
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <a-scene fog="type: exponential; color: #08506b; density: 0.025" background="color: #0a3d5c">
+    <a-assets>
+      <video id="underwater-video" src="assets/video/underwater.mp4" autoplay loop muted playsinline>
+      </video>
+      <!-- autoplay + muted + playsinline — for start without user interaction (browser autoplay policy). -->
+    </a-assets>
+
+    <!-- geometry="ellipsoid; radius: 50" -->
+    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
+
+    </a-videosphere>
+
+
+    <!-- test element -->
+    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+
+    <!-- Marine snow — взвесь в воде, рендерится поверх видео -->
+    <a-entity marine-snow="speed: 0.1"></a-entity>
+
+    <!-- player -->
+    <a-entity id="player" position="0 1.6 0" wasd-controls="acceleration: 30" look-controls
+      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
+      <a-entity camera></a-entity>
+    </a-entity>
+
+  </a-scene>
+
+  <script src="js/swim-bob.js"></script>
+  <script src="js/marine-snow.js"></script>
+  <script src="js/boundary-clamp.js"></script>
+  <script src="js/video.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
