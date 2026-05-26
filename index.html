@@ -22,8 +22,7 @@
     </a-assets>
 
     <!-- geometry="ellipsoid; radius: 50" -->
-    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false"
-      follow-player="y: 0">
+    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
 
     </a-videosphere>
 
@@ -40,39 +39,12 @@
       <a-entity camera></a-entity>
     </a-entity>
 
-
-    <!-- ============================================================ -->
-    <!-- СТАРАЯ ВЕРСИЯ (без видео) — закомментирована                  -->
-    <!-- Чтобы вернуть: вынуть эти элементы из комментария             -->
-    <!-- и закомментировать блок с <a-videosphere> и <a-assets> выше   -->
-    <!-- ============================================================ -->
-
-    <!--
-    Небо
-    <a-sky color="#08293f"></a-sky>
-
-    Поверхность воды круглая
-    <a-circle position="0 20 0" rotation="90 0 0" radius="50" color="#4a9eb8" opacity="0.6"
-      material="side: double; transparent: true">
-    </a-circle>
-
-    God rays
-    <a-cone position="-5 10 -8" rotation="0 0 5" radius-top="0.2" radius-bottom="3" height="25" color="#ffffff"
-      material="transparent: true; opacity: 0.05; blending: additive; depthWrite: false; side: double">
-    </a-cone>
-    <a-cone position="6 10 -5" rotation="0 0 -8" radius-top="0.15" radius-bottom="2.5" height="25" color="#eaf6ff"
-      material="transparent: true; opacity: 0.04; blending: additive; depthWrite: false; side: double">
-    </a-cone>
-    <a-cone position="-2 10 4" rotation="3 0 -4" radius-top="0.25" radius-bottom="3.5" height="25" color="#ffffff"
-      material="transparent: true; opacity: 0.035; blending: additive; depthWrite: false; side: double">
-    </a-cone>
-    <a-cone position="3 10 7" rotation="-2 0 6" radius-top="0.2" radius-bottom="2" height="25" color="#eaf6ff"
-      material="transparent: true; opacity: 0.06; blending: additive; depthWrite: false; side: double">
-    </a-cone>
-    -->
-
   </a-scene>
 
+  <script src="js/swim-bob.js"></script>
+  <script src="js/marine-snow.js"></script>
+  <script src="js/boundary-clamp.js"></script>
+  <script src="js/video.js"></script>
   <script src="js/main.js"></script>
 </body>
 
