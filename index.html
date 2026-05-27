@@ -50,8 +50,10 @@
       scale="1 1 1.2"></a-gltf-model>
     <a-gltf-model id="beach" src="assets/models/layered_beach_rock.glb" position="-32.27 -21.38 -6.743"
       rotation="-4.537 81.746 13.566" scale="100 220.34 100"></a-gltf-model>
-    <a-gltf-model id="covered_rock" src="assets/models/coral_covered_rock..glb" position="-21.90 -9.131 -21.05"
+    <a-gltf-model id="covered_rock" src="assets/models/coral_covered_rock.glb" position="-21.90 -9.131 -21.05"
       rotation="0 40.761 0" scale="0.090 0.050 0.060"></a-gltf-model>
+    <a-gltf-model id="coral" src="assets/models/lowpoly_coral_pack.glb" position="-12 -7 0"
+      scale="1 1 1"></a-gltf-model>
 
     <!-- Marine snow (plankton) -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
@@ -77,13 +79,13 @@
       Spawns 8 large, slow, gliding Manta Rays at depth.
     -->
     <a-entity
-      gltf-fish-spawner="model: #manta-ray; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
+      gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
     <a-entity
-      gltf-fish-spawner="model: #tuna-fish; count: 10; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
+      gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
     <a-entity gltf-fish-spawner="model: #orca; count: 1; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
-    <a-entity gltf-fish-spawner="model: #fish; count: 100; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
+    <a-entity gltf-fish-spawner="model: #fish; count: 7; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
 
 
     <!-- Player -->
