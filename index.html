@@ -44,16 +44,13 @@
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
       rotation="-4.282 63.800 0.584" scale="2 2 2.467"></a-gltf-model>
-    <a-gltf-model id="rock" src="assets/models/beach_rock.glb" position="-28.08 -12.64 4.625"
-      rotation="-4.282 63.163 0.584" scale="103.77 97.524 117.80"></a-gltf-model>
     <a-gltf-model id="pier" src="assets/models/pier.glb" position="-31.58 13.940 -1.893" rotation="-19.33 89.772 1.954"
       scale="1 1 1.2"></a-gltf-model>
-    <a-gltf-model id="beach" src="assets/models/layered_beach_rock.glb" position="-32.27 -21.38 -6.743"
-      rotation="-4.537 81.746 13.566" scale="100 220.34 100"></a-gltf-model>
-    <a-gltf-model id="covered_rock" src="assets/models/coral_covered_rock.glb" position="-21.90 -9.131 -21.05"
-      rotation="0 40.761 0" scale="0.090 0.050 0.060"></a-gltf-model>
-    <a-gltf-model id="coral" src="assets/models/lowpoly_coral_pack.glb" position="-12 -7 0"
-      scale="1 1 1"></a-gltf-model>
+    <a-gltf-model id="underwater-rock-tunnel" src="assets/models/underwater_rock_tunnel.glb" position="-70.07 -21.49 1.312"
+      rotation="0 99.342 0" scale="0.1 0.1 0.190">
+      <a-gltf-model id="coral" src="assets/models/lowpoly_coral_pack.glb" position="-156.3 56.414 325.46"
+        rotation="0 -65.80 0" scale="10 10 10"></a-gltf-model>
+    </a-gltf-model>
 
     <!-- Marine snow (plankton) -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
@@ -65,21 +62,21 @@
       and uses a multiplier of 4 to generate dozens of separate, independent fish.
     -->
     <a-entity
-      school-splitter="model: #fish-school; multiplier: 10; boundary: 25; minSpeed: 2.0; maxSpeed: 4.5; scale: 1.2"></a-entity>
+      school-splitter="model: #fish-school; multiplier: 3; boundary: 25; minSpeed: 2.0; maxSpeed: 4.5; scale: 1.2"></a-entity>
 
     <!-- 
       2. EMPEROR ANGELFISH SPAWNER
       Spawns 25 individual Emperor Angelfish swimming independently throughout the space.
     -->
     <a-entity
-      gltf-fish-spawner="model: #emperor-fish; count: 25; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
+      gltf-fish-spawner="model: #emperor-fish; count: 4; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
 
     <!-- 
       3. MANTA RAY SPAWNER
       Spawns 8 large, slow, gliding Manta Rays at depth.
     -->
     <a-entity
-      gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
+      gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7; modelRotation: 0 0 180"></a-entity>
 
     <a-entity
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
@@ -91,7 +88,7 @@
     <!-- Player -->
     <a-entity id="player" position="0 1.6 0" wasd-controls="acceleration: 30" look-controls
       swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
-      <a-camera></a-camera>
+      <a-entity camera></a-entity>
     </a-entity>
 
   </a-scene>
