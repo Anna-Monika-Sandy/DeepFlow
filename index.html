@@ -34,12 +34,28 @@
       <a-asset-item id="orca" src="assets/models/female_orca.glb"></a-asset-item>
       <a-asset-item id="fish" src="assets/models/fish.glb"></a-asset-item>
 
-
+        <!-- Sound -->
+      <audio id="underwaterSound"
+       src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
+       preload="auto"
+       crossorigin="anonymous">
+      </audio>
+      <a-entity id="soundPlayer"
+          sound="src: #underwaterSound; loop: true; volume: 0.4">
+      </a-entity>
     </a-assets>
 
     <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
     </a-videosphere>
+
+    <a-assets>
+      <audio id="underwater-river" src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3" preload="auto"></audio>
+    </a-assets>
+
+    <a-entity sound="src: #underwater-river; autoplay: true; loop: true; volume: 0.4"></a-entity>
+    <a-entity camera position="0 1.6 0"></a-entity>
+
 
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
@@ -92,6 +108,18 @@
     </a-entity>
 
   </a-scene>
+
+<script>
+  const scene = document.querySelector('a-scene');
+  const soundEl = document.querySelector('#soundPlayer');
+
+  scene.addEventListener('click', () => {
+    if (!soundEl.components.sound.isPlaying) {
+      soundEl.components.sound.playSound();
+    }
+  });
+</script>
+
 </body>
 
 </html>
