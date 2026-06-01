@@ -5,7 +5,7 @@ registerBoundaryClamp();
 registerFishSchool();
 registerGlowyEgg();
 registerOrcaInfoPopup();
-registerMeditationClick();
+registerMantaInfoPopup();
 registerMeditationAttractor();
 registerMeditationMode();
 registerBreathingRing();

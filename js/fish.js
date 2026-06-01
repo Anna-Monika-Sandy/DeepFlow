@@ -234,9 +234,7 @@ function registerFishSchool() {
 
         fishParent.appendChild(gltfModel);
 
-        // ==========================================
         // GLOWING ORCA GLASS EGG DESIGN
-        // ==========================================
         if (
           modelSrc === "assets/models/female_orca.glb" ||
           modelSrc === "#orca"
@@ -304,7 +302,66 @@ function registerFishSchool() {
             }
           });
         }
-        // ==========================================
+        // GLOWING MANTA RAY GLASS EGG DESIGN
+        if (
+          modelSrc === "assets/models/manta_ray_birostris_animated.glb" ||
+          modelSrc === "#manta-ray"
+        ) {
+          // 1. Enable raycast collisions directly on the Manta Ray 3D body
+          gltfModel.setAttribute("class", "clickable");
+
+          // 2. Attach the popup component to the parent container
+          // so it listens for bubbling clicks from BOTH the body and the egg
+          fishParent.setAttribute("manta-info-popup", "");
+
+          // Create the egg shell wrapper
+          const eggShell = document.createElement("a-entity");
+          eggShell.setAttribute("glowy-egg", {
+            glowColor: "#00bfff", // Majestic deep sky blue glow
+            glowIntensity: 2.2,
+            pulseSpeed: 1.0,
+            scale: 3.2,
+          });
+
+          // Mark egg as interactive for raycasting pointer tracking
+          eggShell.setAttribute("class", "clickable");
+          eggShell.setAttribute("position", "0 0 0");
+
+          eggShell.setAttribute("material", {
+            shader: "standard",
+            color: "#7fd3ff",
+            emissive: "#0055ff",
+            emissiveIntensity: 0.5,
+            transparent: true,
+            opacity: 0.45,
+            roughness: 0.08,
+            metalness: 0.2,
+            side: "double",
+          });
+
+          // Smooth pulsing glow effect
+          eggShell.setAttribute("animation", {
+            property: "components.material.material.emissiveIntensity",
+            from: 0.2,
+            to: 0.8,
+            dir: "alternate",
+            dur: 2800,
+            loop: true,
+            easing: "easeInOutSine",
+          });
+
+          fishParent.appendChild(eggShell);
+
+          // Internal point light to project ambient underwater blue light
+          const interiorLight = document.createElement("a-entity");
+          interiorLight.setAttribute("light", {
+            type: "point",
+            color: "#00e1ff",
+            intensity: 2.2,
+            distance: 30,
+          });
+          fishParent.appendChild(interiorLight);
+        }
 
         this.el.appendChild(fishParent);
       }
