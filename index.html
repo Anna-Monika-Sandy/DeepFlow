@@ -134,16 +134,6 @@
       </a-entity>
     </a-entity>
 
-    <script>
-      const scene = document.querySelector('a-scene');
-      const soundEl = document.querySelector('#soundPlayer');
-
-      scene.addEventListener('click', () => {
-        if (!soundEl.components.sound.isPlaying) {
-          soundEl.components.sound.playSound();
-        }
-      });
-    </script>
   </a-scene>
 
 <script>
