@@ -6,7 +6,6 @@ function registerGlowyEgg() {
       glowIntensity: { type: "number", default: 1.5 },
       pulseSpeed: { type: "number", default: 1.5 },
       scale: { type: "number", default: 1.5 },
-      clickRadius: { type: "number", default: 2.0 },
     },
 
     init: function () {
@@ -14,7 +13,6 @@ function registerGlowyEgg() {
       this.isHovered = false;
 
       const geometry = new THREE.IcosahedronGeometry(1, 5);
-
       geometry.scale(1, 1, 1.4);
 
       const material = new THREE.MeshStandardMaterial({
@@ -37,25 +35,27 @@ function registerGlowyEgg() {
       this.eggContainer = eggContainer;
       this.baseOpacity = 0.15;
       this.baseEmissiveIntensity = this.data.glowIntensity;
-      this.el.object3D.add(eggContainer);
 
       eggContainer.scale.multiplyScalar(this.data.scale);
 
-      eggContainer.position.set(0, 0, 0);
+      // THE MAGIC FIX: This specifically tells A-Frame's raycaster that this mesh exists
+      this.el.setObject3D("mesh", eggContainer);
 
+      // Ensure the element has the class the raycaster is looking for
+      this.el.classList.add("clickable");
+
+      // Click listener - fires popup, NO color change
       this.el.addEventListener("click", (evt) => {
-        this.onEggClicked(evt);
+        console.log("🥚 Egg clicked!");
+        this.el.emit("egg-clicked", { target: this.el });
       });
 
-      // Add hover effects
       this.el.addEventListener("mouseenter", () => {
         this.isHovered = true;
-        document.body.style.cursor = "pointer";
       });
 
       this.el.addEventListener("mouseleave", () => {
         this.isHovered = false;
-        document.body.style.cursor = "default";
       });
     },
 
@@ -63,38 +63,22 @@ function registerGlowyEgg() {
       this.time += delta / 1000;
       const pulse =
         Math.sin(this.time * Math.PI * 2 * this.data.pulseSpeed) * 0.5 + 0.5;
+
       this.material.emissiveIntensity =
         this.baseEmissiveIntensity * (0.6 + pulse * 0.6);
-
       this.material.opacity = this.baseOpacity + pulse * 0.15;
 
       this.eggContainer.rotation.y += delta / 5000;
+
+      // Keep the subtle bounce on hover, but scale goes back to normal when not hovering
       if (this.isHovered) {
         const bounce = Math.sin(this.time * Math.PI * 4) * 0.1;
-        this.eggContainer.scale.multiplyScalar(1 + bounce * 0.01);
-      }
-    },
-
-    onEggClicked: function (evt) {
-      console.log("Orca egg clicked!");
-      this.material.emissiveIntensity = this.baseEmissiveIntensity * 3;
-      const originalScale = this.data.scale;
-      const pulse = setInterval(() => {
-        this.eggContainer.scale.multiplyScalar(1.05);
-        setTimeout(() => {
-          this.eggContainer.scale.multiplyScalar(0.95);
-        }, 50);
-      }, 100);
-
-      setTimeout(() => {
-        clearInterval(pulse);
-        this.eggContainer.scale.multiplyScalar(
-          1 / (originalScale / this.data.scale),
+        this.eggContainer.scale.setScalar(
+          this.data.scale * (1 + bounce * 0.05),
         );
-        this.material.emissiveIntensity = this.baseEmissiveIntensity;
-      }, 300);
-
-      this.el.emit("egg-clicked", { target: this.el });
+      } else {
+        this.eggContainer.scale.setScalar(this.data.scale);
+      }
     },
   });
 }
