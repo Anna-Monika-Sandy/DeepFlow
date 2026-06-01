@@ -11,6 +11,25 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/cursor-override.css" />
+  <style>
+    .sound-button {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 999;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #e0f7ff;
+      border: 1px solid #55c8ff;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .sound-button:hover {
+      background: rgba(0, 0, 0, 0.85);
+    }
+  </style>
 
   <!-- Move scripts to the head so components register before <a-scene> is parsed -->
   <script src="js/swim-bob.js"></script>
@@ -24,6 +43,7 @@
 </head>
 
 <body>
+  <button id="soundToggle" class="sound-button">Sound: On</button>
 
   <a-scene fog="type: exponential; color: #08506b; density: 0.025" background="color: #0a3d5c">
     <a-assets>
@@ -41,7 +61,8 @@
       <audio id="underwaterSound" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
         preload="auto" crossorigin="anonymous">
       </audio>
-      <a-entity id="soundPlayer" sound="src: #underwaterSound; loop: true; volume: 0.4">
+      <a-entity id="soundPlayer"
+          sound="src: #underwaterSound; autoplay: true; loop: true; volume: 1.5">
       </a-entity>
     </a-assets>
 
@@ -52,14 +73,6 @@
     <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
     </a-videosphere>
-
-    <a-assets>
-      <audio id="underwater-river" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
-        preload="auto"></audio>
-    </a-assets>
-
-    <a-entity sound="src: #underwater-river; autoplay: true; loop: true; volume: 6"></a-entity>
-
 
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
@@ -131,6 +144,37 @@
         }
       });
     </script>
+  </a-scene>
+
+<script>
+  const scene = document.querySelector('a-scene');
+  const soundEl = document.querySelector('#soundPlayer');
+  const soundToggle = document.querySelector('#soundToggle');
+
+  const updateButton = () => {
+    const isPlaying = soundEl.components.sound && soundEl.components.sound.isPlaying;
+    soundToggle.textContent = isPlaying ? 'Sound: On' : 'Sound: Off';
+  };
+
+  soundToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (soundEl.components.sound.isPlaying) {
+      soundEl.components.sound.pauseSound();
+    } else {
+      soundEl.components.sound.playSound();
+    }
+    updateButton();
+  });
+
+  scene.addEventListener('click', () => {
+    if (!soundEl.components.sound.isPlaying) {
+      soundEl.components.sound.playSound();
+      updateButton();
+    }
+  });
+
+  scene.addEventListener('loaded', updateButton);
+</script>
 
 </body>
 
