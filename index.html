@@ -17,6 +17,7 @@
   <script src="js/boundary-clamp.js"></script>
   <script src="js/fish.js"></script>
   <script src="js/video.js"></script>
+  <script src="js/glowy-egg.js"></script>
   <script src="js/main.js"></script>
 </head>
 
@@ -34,7 +35,15 @@
       <a-asset-item id="orca" src="assets/models/female_orca.glb"></a-asset-item>
       <a-asset-item id="fish" src="assets/models/fish.glb"></a-asset-item>
 
-
+        <!-- Sound -->
+      <audio id="underwaterSound"
+       src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
+       preload="auto"
+       crossorigin="anonymous">
+      </audio>
+      <a-entity id="soundPlayer"
+          sound="src: #underwaterSound; loop: true; volume: 0.4">
+      </a-entity>
     </a-assets>
 
     <!-- Default lighting (replaces A-Frame's auto-lights since we added a-light) -->
@@ -44,6 +53,13 @@
     <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
     </a-videosphere>
+
+    <a-assets>
+      <audio id="underwater-river" src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3" preload="auto"></audio>
+    </a-assets>
+
+    <a-entity sound="src: #underwater-river; autoplay: true; loop: true; volume: 6"></a-entity>
+
 
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
@@ -59,35 +75,23 @@
     <!-- Marine snow (plankton) -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
 
-
-    <!-- 
-      1. TROPICAL FISH SCHOOL (SPLIT AND MULTIPLIED)
-      Loads the school GLB containing multiple fish, splits them up entirely,
-      and uses a multiplier of 4 to generate dozens of separate, independent fish.
-    -->
     <a-entity
       school-splitter="model: #fish-school; multiplier: 3; boundary: 25; minSpeed: 2.0; maxSpeed: 4.5; scale: 1.2"></a-entity>
 
-    <!-- 
-      2. EMPEROR ANGELFISH SPAWNER
-      Spawns 25 individual Emperor Angelfish swimming independently throughout the space.
-    -->
     <a-entity
       gltf-fish-spawner="model: #emperor-fish; count: 4; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
 
-    <!-- 
-      3. MANTA RAY SPAWNER
-      Spawns 8 large, slow, gliding Manta Rays at depth.
-    -->
     <a-entity
       gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7; modelRotation: 0 0 180"></a-entity>
 
     <a-entity
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
-    <a-entity gltf-fish-spawner="model: #orca; count: 1; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
-    <a-entity gltf-fish-spawner="model: #fish; count: 7; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.1"></a-entity>
-
+    <!-- ORCA WITH GLOWY EGG -->
+    <a-entity position="0 4 -10" scale="0.1 0.1 0.1" fish-swim="speed: 1.5; boundary: 25"
+      glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 25">
+      <a-gltf-model src="#orca" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+    </a-entity>
 
     <!-- Meditation point -->
     <a-entity id="meditation-point" position="-5.672 -10.816 -18.375">
@@ -119,6 +123,18 @@
     </a-entity>
 
   </a-scene>
+
+<script>
+  const scene = document.querySelector('a-scene');
+  const soundEl = document.querySelector('#soundPlayer');
+
+  scene.addEventListener('click', () => {
+    if (!soundEl.components.sound.isPlaying) {
+      soundEl.components.sound.playSound();
+    }
+  });
+</script>
+
 </body>
 
 </html>
