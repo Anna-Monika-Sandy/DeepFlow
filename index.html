@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/cursor-override.css" />
   <style>
+    /* Sound Toggle Button Styling */
     .sound-button {
       position: fixed;
       top: 16px;
@@ -26,12 +27,13 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
+
     .sound-button:hover {
       background: rgba(0, 0, 0, 0.85);
     }
   </style>
 
-  <!-- Move scripts to the head so components register before <a-scene> is parsed -->
+  <!-- Script initialization -->
   <script src="js/swim-bob.js"></script>
   <script src="js/marine-snow.js"></script>
   <script src="js/boundary-clamp.js"></script>
@@ -43,12 +45,14 @@
 </head>
 
 <body>
+
+  <!-- Hardcoded to default to "On" right at startup -->
   <button id="soundToggle" class="sound-button">Sound: On</button>
 
   <a-scene fog="type: exponential; color: #08506b; density: 0.025" background="color: #0a3d5c">
     <a-assets>
-      <video id="underwater-video" src="assets/video/underwater.mp4" autoplay loop muted playsinline>
-      </video>
+      <video id="underwater-video" src="assets/video/underwater.mp4" autoplay loop muted playsinline></video>
+
       <!-- Fish models -->
       <a-asset-item id="emperor-fish" src="assets/models/emperor_angelfish_update_v2.glb"></a-asset-item>
       <a-asset-item id="manta-ray" src="assets/models/manta_ray_birostris_animated.glb"></a-asset-item>
@@ -57,22 +61,18 @@
       <a-asset-item id="orca" src="assets/models/female_orca.glb"></a-asset-item>
       <a-asset-item id="fish" src="assets/models/fish.glb"></a-asset-item>
 
-      <!-- Sound -->
+      <!-- Native HTML5 audio element -->
       <audio id="underwaterSound" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
-        preload="auto" crossorigin="anonymous">
-      </audio>
-      <a-entity id="soundPlayer"
-          sound="src: #underwaterSound; autoplay: true; loop: true; volume: 1.5">
-      </a-entity>
+        preload="auto" loop></audio>
     </a-assets>
 
-    <!-- Default lighting (replaces A-Frame's auto-lights since we added a-light) -->
+    <!-- Default lighting -->
     <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
     <a-light type="directional" color="#ffffff" intensity="0.4" position="-1 2 1"></a-light>
 
     <!-- Videosphere background -->
-    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
-    </a-videosphere>
+    <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1"
+      material="fog: false"></a-videosphere>
 
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
@@ -85,48 +85,44 @@
         rotation="0 -65.80 0" scale="10 10 10"></a-gltf-model>
     </a-gltf-model>
 
-    <!-- Marine snow (plankton) -->
+    <!-- Marine snow -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
 
     <a-entity
       school-splitter="model: #fish-school; multiplier: 3; boundary: 25; minSpeed: 2.0; maxSpeed: 4.5; scale: 1.2"></a-entity>
-
     <a-entity
       gltf-fish-spawner="model: #emperor-fish; count: 4; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
-
     <a-entity
       gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7; modelRotation: 0 0 180"></a-entity>
-
     <a-entity
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
-    <!-- ORCA WITH GLOWY EGG -->
-    <a-entity position="0 4 -10" scale="0.1 0.1 0.1" fish-swim="speed: 1.5; boundary: 25"
-      glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 25" orca-info-popup>
-      <a-gltf-model src="#orca" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+    <!-- ORCA WITH NESTED GLOWY EGG -->
+    <a-entity id="orca-entity" position="0 4 -10" fish-swim="speed: 1.5; boundary: 25">
+      <a-gltf-model src="#orca" scale="0.1 0.1 0.1" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+
+      <a-entity class="clickable" glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 2.5"
+        orca-info-popup position="0 0.5 0">
+      </a-entity>
     </a-entity>
 
     <!-- Meditation point -->
     <a-entity id="meditation-point" position="-5.672 -10.816 -18.375">
-
-      <!-- external ring -  Y -->
       <a-entity animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear">
         <a-torus radius="1.5" radius-tubular="0.05" color="#00d4aa" opacity="0.5"></a-torus>
       </a-entity>
-
-      <!-- middle ring -  X -->
       <a-entity animation="property: rotation; to: 360 0 0; dur: 5000; loop: true; easing: linear">
         <a-torus radius="0.8" radius-tubular="0.03" color="#7eb8f7" opacity="0.6"></a-torus>
       </a-entity>
-
-      <!-- inner ring - Z -->
       <a-entity animation="property: rotation; to: 0 0 360; dur: 3000; loop: true; easing: linear">
         <a-torus radius="0.4" radius-tubular="0.02" color="#ffffff" opacity="0.7"></a-torus>
       </a-entity>
-
     </a-entity>
 
-    <!-- Player -->
+    <!-- Ambient Soundtrack component set to autoplay immediately -->
+    <a-entity id="soundPlayer" sound="src: #underwaterSound; autoplay: true; loop: true; volume: 0.8"></a-entity>
+
+    <!-- Player Rig -->
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 73.330 0" wasd-controls="acceleration: 65; fly: true"
       swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28" position-logger>
       <a-entity camera look-controls>
@@ -137,44 +133,46 @@
     <script>
       const scene = document.querySelector('a-scene');
       const soundEl = document.querySelector('#soundPlayer');
+      const soundToggle = document.querySelector('#soundToggle');
 
-      scene.addEventListener('click', () => {
-        if (!soundEl.components.sound.isPlaying) {
-          soundEl.components.sound.playSound();
+      // Track the user's volume preference independently of browser restrictions
+      let isMuted = false;
+
+      const updateButton = () => {
+        // Keeps the UI locked to the user's intent ("On" vs "Off")
+        soundToggle.textContent = isMuted ? 'Sound: Off' : 'Sound: On';
+      };
+
+      // Manual layout button interface click
+      soundToggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        if (soundEl.components.sound) {
+          if (soundEl.components.sound.isPlaying) {
+            soundEl.components.sound.pauseSound();
+            isMuted = true;
+          } else {
+            soundEl.components.sound.playSound();
+            isMuted = false;
+          }
+          updateButton();
         }
       });
+
+      // Browser Autoplay Fallback Activation Loop
+      // The button stays on "Sound: On". The absolute first time the user clicks the screen 
+      // (to move or look around), the audio context activates smoothly without altering the button state.
+      const clearAutoplayBlock = () => {
+        if (!isMuted && soundEl && soundEl.components && soundEl.components.sound) {
+          if (!soundEl.components.sound.isPlaying) {
+            soundEl.components.sound.playSound();
+          }
+        }
+        window.removeEventListener('click', clearAutoplayBlock);
+      };
+
+      window.addEventListener('click', clearAutoplayBlock);
+      scene.addEventListener('loaded', updateButton);
     </script>
-  </a-scene>
-
-<script>
-  const scene = document.querySelector('a-scene');
-  const soundEl = document.querySelector('#soundPlayer');
-  const soundToggle = document.querySelector('#soundToggle');
-
-  const updateButton = () => {
-    const isPlaying = soundEl.components.sound && soundEl.components.sound.isPlaying;
-    soundToggle.textContent = isPlaying ? 'Sound: On' : 'Sound: Off';
-  };
-
-  soundToggle.addEventListener('click', (event) => {
-    event.stopPropagation();
-    if (soundEl.components.sound.isPlaying) {
-      soundEl.components.sound.pauseSound();
-    } else {
-      soundEl.components.sound.playSound();
-    }
-    updateButton();
-  });
-
-  scene.addEventListener('click', () => {
-    if (!soundEl.components.sound.isPlaying) {
-      soundEl.components.sound.playSound();
-      updateButton();
-    }
-  });
-
-  scene.addEventListener('loaded', updateButton);
-</script>
 
 </body>
 
