@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+ß<html lang="en">
 
 <head>
   <meta charset="utf-8" />
@@ -10,6 +10,25 @@
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .sound-button {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 999;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #e0f7ff;
+      border: 1px solid #55c8ff;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .sound-button:hover {
+      background: rgba(0, 0, 0, 0.85);
+    }
+  </style>
 
   <!-- Move scripts to the head so components register before <a-scene> is parsed -->
   <script src="js/swim-bob.js"></script>
@@ -52,14 +71,6 @@
     <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
     </a-videosphere>
-
-    <a-assets>
-      <audio id="underwater-river" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
-        preload="auto"></audio>
-    </a-assets>
-
-    <a-entity sound="src: #underwater-river; autoplay: true; loop: true; volume: 6"></a-entity>
-
 
     <!-- Static environment objects -->
     <a-gltf-model id="boat" src="assets/models/bateau_riva_boat.glb" position="-3.128 20.031 0.150"
