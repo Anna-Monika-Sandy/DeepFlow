@@ -4,4 +4,5 @@ registerMarineSnow();
 registerBoundaryClamp();
 registerFishSchool();
 registerGlowyEgg();
+registerOrcaInfoPopup();
 initVideo();

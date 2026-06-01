@@ -43,6 +43,10 @@ function registerGlowyEgg() {
 
       eggContainer.position.set(0, 0, 0);
 
+      // Make the mesh raycaster-interactive
+      mesh.userData.clickable = true;
+
+      // Listen for click on the entity itself
       this.el.addEventListener("click", (evt) => {
         this.onEggClicked(evt);
       });

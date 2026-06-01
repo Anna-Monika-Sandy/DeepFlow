@@ -1,6 +1,5 @@
 // Register fish components once AFRAME is available
 function registerFishSchool() {
-  
   // 1. Core swimming behavior component
   AFRAME.registerComponent("fish-swim", {
     schema: {
@@ -68,15 +67,16 @@ function registerFishSchool() {
   // 2. Masking component to isolate a single fish mesh in each cloned instance
   AFRAME.registerComponent("isolate-fish", {
     schema: {
-      index: { type: "number", default: 0 }
+      index: { type: "number", default: 0 },
     },
     init: function () {
       this.el.addEventListener("model-loaded", () => {
         const model = this.el.getObject3D("mesh");
         if (!model) return;
 
-        const root = model.children[0] || model;
-        const children = root.children;
+        // SAFE GUARD: Avoid crashes if model structure varies
+        const root = (model.children && model.children) || model;
+        const children = root.children || [];
 
         if (children.length === 0) return;
 
@@ -102,7 +102,7 @@ function registerFishSchool() {
           }
         }
       });
-    }
+    },
   });
 
   // 3. School splitter with built-in multiplier to easily scale up separated fish quantity
@@ -113,7 +113,7 @@ function registerFishSchool() {
       minSpeed: { type: "number", default: 1.5 },
       maxSpeed: { type: "number", default: 4.0 },
       scale: { type: "number", default: 1.0 },
-      multiplier: { type: "number", default: 3 } // Multiplies the number of separated fish clones spawned
+      multiplier: { type: "number", default: 3 }, // Multiplies the number of separated fish clones spawned
     },
 
     init: function () {
@@ -133,8 +133,10 @@ function registerFishSchool() {
         const model = tempModel.getObject3D("mesh");
         if (!model) return;
 
-        const root = model.children[0] || model;
-        const fishCount = root.children.length;
+        // SAFE GUARD: Prevents original .length crash
+        const root = (model.children && model.children) || model;
+        const children = root.children || [];
+        const fishCount = children.length;
 
         // Loop using the multiplier to populate the environment with independent fish clones
         for (let m = 0; m < this.data.multiplier; m++) {
@@ -149,16 +151,22 @@ function registerFishSchool() {
 
             fishParent.setAttribute("position", { x, y, z });
 
-            const speed = this.data.minSpeed + Math.random() * (this.data.maxSpeed - this.data.minSpeed);
+            const speed =
+              this.data.minSpeed +
+              Math.random() * (this.data.maxSpeed - this.data.minSpeed);
             fishParent.setAttribute("fish-swim", {
               speed: speed,
-              boundary: this.data.boundary
+              boundary: this.data.boundary,
             });
 
             // Randomize individual sizing slightly for natural variety
             const scaleVariation = 0.8 + Math.random() * 0.4;
             const finalScale = this.data.scale * scaleVariation;
-            fishParent.setAttribute("scale", { x: finalScale, y: finalScale, z: finalScale });
+            fishParent.setAttribute("scale", {
+              x: finalScale,
+              y: finalScale,
+              z: finalScale,
+            });
 
             const gltfModel = document.createElement("a-gltf-model");
             gltfModel.setAttribute("src", modelSrc);
@@ -175,10 +183,10 @@ function registerFishSchool() {
       });
 
       this.el.appendChild(tempModel);
-    }
+    },
   });
 
-  // 4. General GLTF fish spawner for individual models (e.g. emperor-fish, manta-ray)
+  // 4. General GLTF fish spawner for individual models (e.g. emperor-fish, manta-ray, orca)
   AFRAME.registerComponent("gltf-fish-spawner", {
     schema: {
       model: { type: "selector" },
@@ -228,6 +236,75 @@ function registerFishSchool() {
         gltfModel.setAttribute("animation-mixer", "clip: *; loop: repeat");
 
         fishParent.appendChild(gltfModel);
+
+        // ==========================================
+        // GLOWING ORCA GLASS EGG DESIGN
+        // ==========================================
+        if (
+          modelSrc === "assets/models/female_orca.glb" ||
+          modelSrc === "#orca"
+        ) {
+          const eggShell = document.createElement("a-entity");
+
+          eggShell.setAttribute("geometry", {
+            primitive: "sphere",
+            radius: 20,
+            segmentsWidth: 32,
+            segmentsHeight: 32,
+          });
+          eggShell.setAttribute("scale", "1 1.4 1");
+          eggShell.setAttribute("position", "0 0 0");
+
+          eggShell.setAttribute("material", {
+            shader: "standard",
+            color: "#d9a1ff", // Soft lavender base
+            emissive: "#ff0077", // Intense neon magenta glow
+            emissiveIntensity: 0.6, // Stronger glow to cut through the dark water
+            transparent: true,
+            opacity: 0.5, // Balanced transparency
+            roughness: 0.05, // High-gloss crystal polish
+            metalness: 0.3,
+            side: "double",
+          });
+
+          // Smooth pulsing glow effect mimicking breathing meditation
+          eggShell.setAttribute("animation", {
+            property: "components.material.material.emissiveIntensity",
+            from: 0.3,
+            to: 0.7,
+            dir: "alternate",
+            dur: 2200,
+            loop: true,
+            easing: "easeInOutSine",
+          });
+
+          fishParent.appendChild(eggShell);
+
+          // Internal point light to project light outwards and illuminate the internal orca
+          const interiorLight = document.createElement("a-entity");
+          interiorLight.setAttribute("light", {
+            type: "point",
+            color: "#6effeb",
+            intensity: 2.5,
+            distance: 35,
+          });
+          fishParent.appendChild(interiorLight);
+
+          // Inject custom emissive material settings directly onto the orca model once loaded
+          gltfModel.addEventListener("model-loaded", () => {
+            const mesh3D = gltfModel.getObject3D("mesh");
+            if (mesh3D) {
+              mesh3D.traverse((node) => {
+                if (node.isMesh && node.material) {
+                  node.material.emissive = new THREE.Color("#00ffd5");
+                  node.material.emissiveIntensity = 0.4; // Radiates light through the texture
+                }
+              });
+            }
+          });
+        }
+        // ==========================================
+
         this.el.appendChild(fishParent);
       }
     },
@@ -239,7 +316,6 @@ function registerFishSchool() {
       count: { type: "number", default: 20 },
       boundary: { type: "number", default: 26 },
     },
-    init: function () {
-    },
+    init: function () {},
   });
 }

@@ -18,6 +18,7 @@
   <script src="js/fish.js"></script>
   <script src="js/video.js"></script>
   <script src="js/glowy-egg.js"></script>
+  <script src="js/orca-info-popup.js"></script>
   <script src="js/main.js"></script>
 </head>
 
@@ -86,9 +87,10 @@
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
     <!-- ORCA WITH GLOWY EGG -->
-    <a-entity position="0 4 -10" scale="0.1 0.1 0.1" fish-swim="speed: 1.5; boundary: 25"
-      glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 25">
-      <a-gltf-model src="#orca" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+    <a-entity id="orca-entity" class="clickable" position="0 4 -10" scale="0.1 0.1 0.1"
+      fish-swim="speed: 1.5; boundary: 25"
+      glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 25" orca-info-popup>
+      <a-gltf-model src="assets/models/female_orca.glb" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
     </a-entity>
 
     <!-- Meditation point -->
@@ -114,8 +116,12 @@
     <!-- Player -->
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 73.330 0" wasd-controls="acceleration: 65; fly: true"
       swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28" position-logger>
-      <a-entity camera look-controls></a-entity>
-    </a-entity>
+
+      <a-entity camera look-controls>
+        <!-- Mouse pointer raycaster -->
+        <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable, [glowy-egg], [orca-info-popup]">
+        </a-entity>
+      </a-entity>
 
   </a-scene>
 
