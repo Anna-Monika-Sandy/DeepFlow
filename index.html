@@ -135,11 +135,9 @@
       const soundEl = document.querySelector('#soundPlayer');
       const soundToggle = document.querySelector('#soundToggle');
 
-      // Track the user's volume preference independently of browser restrictions
       let isMuted = false;
 
       const updateButton = () => {
-        // Keeps the UI locked to the user's intent ("On" vs "Off")
         soundToggle.textContent = isMuted ? 'Sound: Off' : 'Sound: On';
       };
 
@@ -158,9 +156,7 @@
         }
       });
 
-      // Browser Autoplay Fallback Activation Loop
-      // The button stays on "Sound: On". The absolute first time the user clicks the screen 
-      // (to move or look around), the audio context activates smoothly without altering the button state.
+      
       const clearAutoplayBlock = () => {
         if (!isMuted && soundEl && soundEl.components && soundEl.components.sound) {
           if (!soundEl.components.sound.isPlaying) {
