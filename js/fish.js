@@ -244,16 +244,20 @@ function registerFishSchool() {
           modelSrc === "assets/models/female_orca.glb" ||
           modelSrc === "#orca"
         ) {
+          // Create the egg shell wrapper
           const eggShell = document.createElement("a-entity");
-
-          eggShell.setAttribute("geometry", {
-            primitive: "sphere",
-            radius: 20,
-            segmentsWidth: 32,
-            segmentsHeight: 32,
+          eggShell.setAttribute("glowy-egg", {
+            glowColor: "#00ffd5",
+            glowIntensity: 2.0,
+            pulseSpeed: 1.2,
+            scale: 2.2,
           });
-          eggShell.setAttribute("scale", "1 1.4 1");
-          eggShell.setAttribute("position", "0 0 0");
+
+          // ADD THIS LINE
+          eggShell.setAttribute("class", "clickable");
+
+          eggShell.setAttribute("orca-info-popup", "");
+          eggShell.setAttribute("position", "0 0.5 0");
 
           eggShell.setAttribute("material", {
             shader: "standard",

@@ -1,0 +1,32 @@
+/* Hide A-Frame's default cursor and use standard mouse cursor */
+
+/* Hide the default A-Frame cursor ring/reticle */
+.a-cursor,
+a-cursor {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove any grab/grasp cursor styles */
+body {
+  cursor: auto !important;
+}
+
+canvas {
+  cursor: auto !important;
+}
+
+/* Standard pointer on interactive elements */
+a-entity[glowy-egg] {
+  cursor: pointer !important;
+}
+
+/* Crosshair for immersive/VR mode */
+body.immersive {
+  cursor: crosshair;
+}
+
+/* Optional: Hide look-controls cursor if present */
+a-entity[look-controls] {
+  cursor: auto !important;
+}
