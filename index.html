@@ -35,23 +35,25 @@
       <a-asset-item id="orca" src="assets/models/female_orca.glb"></a-asset-item>
       <a-asset-item id="fish" src="assets/models/fish.glb"></a-asset-item>
 
-        <!-- Sound -->
-      <audio id="underwaterSound"
-       src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
-       preload="auto"
-       crossorigin="anonymous">
+      <!-- Sound -->
+      <audio id="underwaterSound" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
+        preload="auto" crossorigin="anonymous">
       </audio>
-      <a-entity id="soundPlayer"
-          sound="src: #underwaterSound; loop: true; volume: 0.4">
+      <a-entity id="soundPlayer" sound="src: #underwaterSound; loop: true; volume: 0.4">
       </a-entity>
     </a-assets>
+
+    <!-- Default lighting (replaces A-Frame's auto-lights since we added a-light) -->
+    <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+    <a-light type="directional" color="#ffffff" intensity="0.4" position="-1 2 1"></a-light>
 
     <!-- Videosphere background -->
     <a-videosphere src="#underwater-video" radius="50" rotation="0 180 0" scale="-1 0.4 1" material="fog: false">
     </a-videosphere>
 
     <a-assets>
-      <audio id="underwater-river" src="assets/sounds/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3" preload="auto"></audio>
+      <audio id="underwater-river" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
+        preload="auto"></audio>
     </a-assets>
 
     <a-entity sound="src: #underwater-river; autoplay: true; loop: true; volume: 6"></a-entity>
@@ -89,24 +91,44 @@
       <a-gltf-model src="#orca" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
     </a-entity>
 
+    <!-- Meditation point -->
+    <a-entity id="meditation-point" position="-5.672 -10.816 -18.375">
+
+      <!-- external ring -  Y -->
+      <a-entity animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear">
+        <a-torus radius="1.5" radius-tubular="0.05" color="#00d4aa" opacity="0.5"></a-torus>
+      </a-entity>
+
+      <!-- middle ring -  X -->
+      <a-entity animation="property: rotation; to: 360 0 0; dur: 5000; loop: true; easing: linear">
+        <a-torus radius="0.8" radius-tubular="0.03" color="#7eb8f7" opacity="0.6"></a-torus>
+      </a-entity>
+
+      <!-- inner ring - Z -->
+      <a-entity animation="property: rotation; to: 0 0 360; dur: 3000; loop: true; easing: linear">
+        <a-torus radius="0.4" radius-tubular="0.02" color="#ffffff" opacity="0.7"></a-torus>
+      </a-entity>
+
+    </a-entity>
+
     <!-- Player -->
-    <a-entity id="player" position="18.304 -10.37 17.834" rotation="0 73.330 0" wasd-controls="acceleration: 30"
-      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
+    <a-entity id="player" position="18.304 -2 17.834" rotation="0 73.330 0" wasd-controls="acceleration: 65; fly: true"
+      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28" position-logger>
       <a-entity camera look-controls></a-entity>
     </a-entity>
 
   </a-scene>
 
-<script>
-  const scene = document.querySelector('a-scene');
-  const soundEl = document.querySelector('#soundPlayer');
+  <script>
+    const scene = document.querySelector('a-scene');
+    const soundEl = document.querySelector('#soundPlayer');
 
-  scene.addEventListener('click', () => {
-    if (!soundEl.components.sound.isPlaying) {
-      soundEl.components.sound.playSound();
-    }
-  });
-</script>
+    scene.addEventListener('click', () => {
+      if (!soundEl.components.sound.isPlaying) {
+        soundEl.components.sound.playSound();
+      }
+    });
+  </script>
 
 </body>
 
