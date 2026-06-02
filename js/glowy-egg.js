@@ -36,17 +36,15 @@ function registerGlowyEgg() {
       this.baseOpacity = 0.15;
       this.baseEmissiveIntensity = this.data.glowIntensity;
 
-      eggContainer.scale.multiplyScalar(this.data.scale);
+      eggContainer.scale.setScalar(this.data.scale);
 
-      // THE MAGIC FIX: This specifically tells A-Frame's raycaster that this mesh exists
+      // Bind the custom Three.js geometry directly to A-Frame's structural collision system
       this.el.setObject3D("mesh", eggContainer);
 
-      // Ensure the element has the class the raycaster is looking for
-      this.el.classList.add("clickable");
-
-      // Click listener - fires popup, NO color change
+      // Simple execution listeners
       this.el.addEventListener("click", (evt) => {
-        console.log("🥚 Egg clicked!");
+        console.log("🥚 Egg component clicked!");
+        // Emits structural click up to orca-info-popup.js without editing any material colors
         this.el.emit("egg-clicked", { target: this.el });
       });
 
@@ -70,7 +68,6 @@ function registerGlowyEgg() {
 
       this.eggContainer.rotation.y += delta / 5000;
 
-      // Keep the subtle bounce on hover, but scale goes back to normal when not hovering
       if (this.isHovered) {
         const bounce = Math.sin(this.time * Math.PI * 4) * 0.1;
         this.eggContainer.scale.setScalar(
