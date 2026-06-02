@@ -105,22 +105,22 @@
       scale="1.7 1.7 1.7"></a-gltf-model>
 
     <!-- Static plants and coral on the seabed -->
-   <a-gltf-model id="gardinerosis" src="assets/models/gardineroseris_planulata.glb" position="14.0 -18.8 0.5"
-     rotation="0 40 0" scale="0.35 0.35 0.35"></a-gltf-model>
-   <a-gltf-model id="base-seaweed" src="assets/models/base_seaweed.glb" position="17.8 -17.65 -5.2"
-     rotation="0 100 0" scale="1.3 1.3 1.3"></a-gltf-model>
-   <a-gltf-model id="wiggle-seaweed" src="assets/models/wiggle_seaweed.glb" position="15.0 -18.7 -4.5"
-     rotation="0 85 5" scale="1.4 1.4 1.4"></a-gltf-model>
-   <a-gltf-model id="tall-seaweed" src="assets/models/tall_seaweed.glb" position="6.0 -18.5 -8.2"
-     rotation="0 60 0" scale="1.7 1.7 1.7"></a-gltf-model>
+    <a-gltf-model id="gardinerosis" src="assets/models/gardineroseris_planulata.glb" position="14.0 -18.8 0.5"
+      rotation="0 40 0" scale="0.35 0.35 0.35"></a-gltf-model>
+    <a-gltf-model id="base-seaweed" src="assets/models/base_seaweed.glb" position="17.8 -17.65 -5.2" rotation="0 100 0"
+      scale="1.3 1.3 1.3"></a-gltf-model>
+    <a-gltf-model id="wiggle-seaweed" src="assets/models/wiggle_seaweed.glb" position="15.0 -18.7 -4.5"
+      rotation="0 85 5" scale="1.4 1.4 1.4"></a-gltf-model>
+    <a-gltf-model id="tall-seaweed" src="assets/models/tall_seaweed.glb" position="6.0 -18.5 -8.2" rotation="0 60 0"
+      scale="1.7 1.7 1.7"></a-gltf-model>
 
 
-   <a-gltf-model id="base-seaweed" src="assets/models/base_seaweed.glb" position="13.8 -17.65 -5.2"
-     rotation="0 100 0" scale="1.3 1.3 1.3"></a-gltf-model>
-   <a-gltf-model id="wiggle-seaweed" src="assets/models/wiggle_seaweed.glb" position="25.0 -16.19 -4.5"
-     rotation="0 85 5" scale="1.4 1.4 1.4"></a-gltf-model>
-   <a-gltf-model id="tall-seaweed" src="assets/models/tall_seaweed.glb" position="12.0 -18.5 -8.2"
-     rotation="0 60 0" scale="1.7 1.7 1.7"></a-gltf-model>
+    <a-gltf-model id="base-seaweed" src="assets/models/base_seaweed.glb" position="13.8 -17.65 -5.2" rotation="0 100 0"
+      scale="1.3 1.3 1.3"></a-gltf-model>
+    <a-gltf-model id="wiggle-seaweed" src="assets/models/wiggle_seaweed.glb" position="25.0 -16.19 -4.5"
+      rotation="0 85 5" scale="1.4 1.4 1.4"></a-gltf-model>
+    <a-gltf-model id="tall-seaweed" src="assets/models/tall_seaweed.glb" position="12.0 -18.5 -8.2" rotation="0 60 0"
+      scale="1.7 1.7 1.7"></a-gltf-model>
 
     <!-- Marine snow (plankton) -->
     <a-entity marine-snow="speed: 0.1"></a-entity>
@@ -135,11 +135,12 @@
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
     <!-- ORCA WITH NESTED GLOWY EGG -->
-    <a-entity id="orca-entity" position="0 4 -10" fish-swim="speed: 1.5; boundary: 25">
-      <a-gltf-model src="#orca" scale="0.1 0.1 0.1" animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+    <a-entity id="orca-entity" orca-info-popup position="0 4 -10" fish-swim="speed: 1.5; boundary: 25">
+      <a-gltf-model class="clickable" src="#orca" scale="0.1 0.1 0.1"
+        animation-mixer="clip: *; loop: repeat"></a-gltf-model>
 
       <a-entity class="clickable" glowy-egg="glowColor: #00ffff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 2.5"
-        orca-info-popup position="0 0.5 0">
+        position="0 0.5 0">
       </a-entity>
     </a-entity>
 

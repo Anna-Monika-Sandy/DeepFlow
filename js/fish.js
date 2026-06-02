@@ -239,6 +239,12 @@ function registerFishSchool() {
           modelSrc === "assets/models/female_orca.glb" ||
           modelSrc === "#orca"
         ) {
+          // Attach the popup component to the parent so it catches clicks from both child elements
+          fishParent.setAttribute("orca-info-popup", "");
+
+          // Make the main Orca body mesh responsive to hover pointers and clicks
+          gltfModel.setAttribute("class", "clickable");
+
           // Create the egg shell wrapper
           const eggShell = document.createElement("a-entity");
           eggShell.setAttribute("glowy-egg", {
@@ -248,20 +254,17 @@ function registerFishSchool() {
             scale: 2.2,
           });
 
-          // ADD THIS LINE
           eggShell.setAttribute("class", "clickable");
-
-          eggShell.setAttribute("orca-info-popup", "");
           eggShell.setAttribute("position", "0 0.5 0");
 
           eggShell.setAttribute("material", {
             shader: "standard",
-            color: "#d9a1ff", // Soft lavender base
-            emissive: "#ff0077", // Intense neon magenta glow
-            emissiveIntensity: 0.6, // Stronger glow to cut through the dark water
+            color: "#d9a1ff",
+            emissive: "#ff0077",
+            emissiveIntensity: 0.6,
             transparent: true,
-            opacity: 0.5, // Balanced transparency
-            roughness: 0.05, // High-gloss crystal polish
+            opacity: 0.5,
+            roughness: 0.05,
             metalness: 0.3,
             side: "double",
           });
@@ -296,7 +299,7 @@ function registerFishSchool() {
               mesh3D.traverse((node) => {
                 if (node.isMesh && node.material) {
                   node.material.emissive = new THREE.Color("#00ffd5");
-                  node.material.emissiveIntensity = 0.4; // Radiates light through the texture
+                  node.material.emissiveIntensity = 0.4;
                 }
               });
             }
