@@ -50,10 +50,12 @@ function registerGlowyEgg() {
 
       this.el.addEventListener("mouseenter", () => {
         this.isHovered = true;
+        document.body.classList.add('cursor-pointer');
       });
 
       this.el.addEventListener("mouseleave", () => {
         this.isHovered = false;
+        document.body.classList.remove('cursor-pointer');
       });
     },
 

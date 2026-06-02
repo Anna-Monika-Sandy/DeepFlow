@@ -1,32 +1,14 @@
-/* Hide A-Frame's default cursor and use standard mouse cursor */
-
-/* Hide the default A-Frame cursor ring/reticle */
-.a-cursor,
-a-cursor {
-  display: none !important;
-  visibility: hidden !important;
+/* Default cursor for the 3D canvas */
+.a-canvas {
+  cursor: default;
 }
 
-/* Remove any grab/grasp cursor styles */
-body {
-  cursor: auto !important;
-}
-
-canvas {
-  cursor: auto !important;
-}
-
-/* Standard pointer on interactive elements */
-a-entity[glowy-egg] {
-  cursor: pointer !important;
+/* Pointer when hovering an interactive object — toggled from JS */
+body.cursor-pointer .a-canvas {
+  cursor: pointer;
 }
 
 /* Crosshair for immersive/VR mode */
-body.immersive {
+body.immersive .a-canvas {
   cursor: crosshair;
-}
-
-/* Optional: Hide look-controls cursor if present */
-a-entity[look-controls] {
-  cursor: auto !important;
 }
