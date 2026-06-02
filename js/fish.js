@@ -74,9 +74,8 @@ function registerFishSchool() {
         const model = this.el.getObject3D("mesh");
         if (!model) return;
 
-        // SAFE GUARD: Avoid crashes if model structure varies
-        const root = (model.children && model.children) || model;
-        const children = root.children || [];
+        const root = model.children[0] || model;
+        const children = root.children;
 
         if (children.length === 0) return;
 
@@ -133,10 +132,8 @@ function registerFishSchool() {
         const model = tempModel.getObject3D("mesh");
         if (!model) return;
 
-        // SAFE GUARD: Prevents original .length crash
-        const root = (model.children && model.children) || model;
-        const children = root.children || [];
-        const fishCount = children.length;
+        const root = model.children[0] || model;
+        const fishCount = root.children.length;
 
         // Loop using the multiplier to populate the environment with independent fish clones
         for (let m = 0; m < this.data.multiplier; m++) {
