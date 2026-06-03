@@ -6,6 +6,7 @@ registerFishSchool();
 registerGlowyEgg();
 registerOrcaInfoPopup();
 registerMantaInfoPopup();
+registerMeditationClick();
 registerMeditationAttractor();
 registerMeditationMode();
 registerBreathingRing();
