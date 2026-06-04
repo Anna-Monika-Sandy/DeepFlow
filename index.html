@@ -11,27 +11,6 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/cursor-override.css" />
-  <style>
-    /* Sound Toggle Button Styling */
-    .sound-button {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 999;
-      padding: 10px 14px;
-      background: rgba(0, 0, 0, 0.65);
-      color: #e0f7ff;
-      border: 1px solid #55c8ff;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .sound-button:hover {
-      background: rgba(0, 0, 0, 0.85);
-    }
-  </style>
 
   <!-- Script initialization -->
   <script src="js/swim-bob.js"></script>
@@ -45,6 +24,7 @@
   <script src="js/meditation-click.js"></script>
   <script src="js/meditation-attractor.js"></script>
   <script src="js/meditation-mode.js"></script>
+  <script src="js/soundplayer.js"></script>
   <script src="js/breathing-ring.js"></script>
   <script src="js/main.js"></script>
 </head>
@@ -169,7 +149,7 @@
     </a-entity>
 
     <!-- Ambient Soundtrack component set to autoplay immediately -->
-    <a-entity id="soundPlayer" sound="src: #underwaterSound; loop: true; volume: 0.8"></a-entity>
+    <a-entity id="soundPlayer" sound="src: #underwaterSound; loop: true; volume: 0.8" sound-player></a-entity>
 
     <!-- Player Rig -->
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 53.330 0" wasd-controls="acceleration: 65; fly: true"
@@ -203,26 +183,6 @@
     </a-entity>
 
   </a-scene>
-
-  <script>
-    const soundEl = document.querySelector('#soundPlayer');
-    const soundToggle = document.querySelector('#soundToggle');
-
-    const getSound = () => soundEl.components && soundEl.components.sound;
-
-    soundToggle.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const sound = getSound();
-      if (!sound) return;
-      if (sound.isPlaying) {
-        sound.pauseSound();
-        soundToggle.textContent = 'Sound: Off';
-      } else {
-        sound.playSound();
-        soundToggle.textContent = 'Sound: On';
-      }
-    });
-  </script>
 
 </body>
 
