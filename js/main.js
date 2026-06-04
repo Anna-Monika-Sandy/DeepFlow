@@ -10,4 +10,5 @@ registerMeditationClick();
 registerMeditationAttractor();
 registerMeditationMode();
 registerBreathingRing();
+registerSoundPlayer();
 initVideo();
