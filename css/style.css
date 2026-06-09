@@ -4,7 +4,7 @@
   right: 16px;
   z-index: 999;
   padding: 10px 14px;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(244, 241, 241, 0.65);
   color: #e0f7ff;
   border: 1px solid #55c8ff;
   border-radius: 12px;
@@ -14,5 +14,11 @@
 }
 
 .sound-button:hover {
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(165, 173, 211, 0.85);
+}
+
+.sound-button img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
