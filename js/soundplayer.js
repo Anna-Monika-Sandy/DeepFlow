@@ -1,61 +1,81 @@
 function registerSoundPlayer() {
   AFRAME.registerComponent('sound-player', {
     schema: {
-      button: { type: 'selector', default: '#soundToggle' }
+      button: { type: 'selector', default: '#soundToggle' },
+      vrButton: { type: 'selector', default: '#soundToggleIcon' }
     },
 
     init: function () {
       this.button = this.data.button;
+      this.vrButton = this.data.vrButton;
       this.updateButton = this.updateButton.bind(this);
       this.toggleSound = this.toggleSound.bind(this);
-      this.clearAutoplayBlock = this.clearAutoplayBlock.bind(this);
+      this.isPlayngSound = false;
 
-      if (!this.button) {
-        return;
+      if (this.button) {
+        this.button.addEventListener('click', this.toggleSound);
       }
 
-      this.button.addEventListener('click', this.toggleSound);
-      window.addEventListener('click', this.clearAutoplayBlock, { once: true });
+      if (this.vrButton) {
+        this.vrButton.addEventListener('click', this.toggleSound);
+        this.vrButton.addEventListener('triggerdown', this.toggleSound);
+      }
 
       if (this.el.sceneEl) {
         this.el.sceneEl.addEventListener('loaded', this.updateButton);
       }
+      // Unlock browser audio on first user interaction
+      const context = THREE.AudioContext.getContext();
 
       this.updateButton();
     },
 
     updateButton: function () {
-      const isPlaying = this.el.components?.sound?.isPlaying;
-      this.button.textContent = isPlaying ? 'Sound: On' : 'Sound: Off';
+      const icon = this.isPlayngSound ? 'assets/audio/soundoff.svg' : 'assets/audio/soundon.svg';
+      const label = this.isPlayngSound ? 'Mute sound' : 'Enable sound';
+
+      if (this.button) {
+        this.button.innerHTML = `<img src="${icon}" alt="${label}">`;
+        this.button.setAttribute('aria-label', label);
+        this.button.title = label;
+      }
+
+      if (this.vrButton) {
+        const assetId = this.isPlayngSound ? '#soundOffIcon' : '#soundOnIcon';
+        this.vrButton.setAttribute('src', assetId);
+        this.vrButton.setAttribute('data-label', label);
+      }
     },
 
     toggleSound: function (event) {
+      this.isPlayngSound = !this.isPlayngSound;
+      event.preventDefault();
       event.stopPropagation();
-      if (!this.el.components?.sound) {
+
+      const sound = this.el.components?.sound;
+      if (!sound) {
         return;
       }
 
-      if (this.el.components.sound.isPlaying) {
-        this.el.components.sound.pauseSound();
+      if (this.isPlayngSound) {
+        sound.playSound();
       } else {
-        this.el.components.sound.playSound();
+        sound.pauseSound();
       }
 
-      this.updateButton();
-    },
-
-    clearAutoplayBlock: function () {
-      if (this.el.components?.sound && !this.el.components.sound.isPlaying) {
-        this.el.components.sound.playSound();
-        this.updateButton();
-      }
+      setTimeout(() => this.updateButton(), 100);
     },
 
     remove: function () {
       if (this.button) {
         this.button.removeEventListener('click', this.toggleSound);
       }
-      window.removeEventListener('click', this.clearAutoplayBlock);
+
+      if (this.vrButton) {
+        this.vrButton.removeEventListener('click', this.toggleSound);
+        this.vrButton.removeEventListener('triggerdown', this.toggleSound);
+      }
+
       if (this.el.sceneEl) {
         this.el.sceneEl.removeEventListener('loaded', this.updateButton);
       }
