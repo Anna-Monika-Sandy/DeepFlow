@@ -30,37 +30,42 @@ function registerFishSchool() {
       const pos = this.el.object3D.position;
       const r = this.data.boundary;
 
-      // Check boundary
+      // 1. Horizontal Boundary Check (X and Z cylinder)
       const distSq = pos.x * pos.x + pos.z * pos.z;
       if (distSq > r * r) {
+        // Out of bounds horizontally -> turn back toward the center
         this.targetDirection.set(-pos.x, 0, -pos.z).normalize();
       } else if (this.steerTime <= 0) {
+        // Safe inside bounds -> occasionally pick a new relaxed direction
         this.targetDirection
           .set(
-            this.direction.x + (Math.random() - 0.5) * 0.4,
+            Math.random() - 0.5,
             (Math.random() - 0.5) * 0.1,
-            this.direction.z + (Math.random() - 0.5) * 0.4,
+            Math.random() - 0.5,
           )
           .normalize();
-        this.steerTime = 3 + Math.random() * 4;
+        this.steerTime = 2 + Math.random() * 3; // Steer again in 2-5 seconds
       }
 
+      // 2. VERTICAL DEPTH SAFETY NET (Prevents fish from vanishing over time)
+      if (pos.y > 2) {
+        this.targetDirection.y = -0.3; // Too high! Guide them back down
+      } else if (pos.y < -12) {
+        this.targetDirection.y = 0.3; // Too deep! Guide them back up
+      }
+
+      // Keep vectors uniform to stop compounding floating-point errors
+      this.targetDirection.normalize();
+
+      // 3. Smoothly steer towards the target heading
       this.direction.lerp(this.targetDirection, dt * 1.5).normalize();
+
+      // 4. Apply movement
       pos.addScaledVector(this.direction, this.speed * dt);
 
-      if (pos.y < 0.5) pos.y = 0.5;
-      if (pos.y > 9.5) pos.y = 9.5;
-
-      // Rotate fish toward movement direction
+      // 5. Point the 3D model toward its new position
       const lookTarget = new THREE.Vector3().copy(pos).add(this.direction);
       this.el.object3D.lookAt(lookTarget);
-
-      // Tail wiggle (only applicable to procedural custom-built fish)
-      const tail = this.el.querySelector(".fish-tail");
-      if (tail) {
-        const wiggle = Math.sin(this.time * 2.5 * Math.PI * 2) * 0.2;
-        tail.object3D.rotation.y = wiggle;
-      }
     },
   });
 
