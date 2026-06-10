@@ -31,7 +31,7 @@ function registerSoundPlayer() {
     },
 
     updateButton: function () {
-      const icon = this.isPlayngSound ? 'assets/audio/soundoff.svg' : 'assets/audio/soundon.svg';
+      const icon = this.isPlayngSound ? 'assets/images/soundoff.svg' : 'assets/images/soundon.svg';
       const label = this.isPlayngSound ? 'Mute sound' : 'Enable sound';
 
       if (this.button) {

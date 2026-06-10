@@ -13,6 +13,7 @@ function registerMeditationAttractor() {
     init: function () {
       this.player = document.querySelector('#player');
       this.scene = this.el.sceneEl;
+      this.isMobile = AFRAME.utils.device.isMobile();
       this.time = 0;
       this.currentInfluence = 0;
       this.hintInfluence = 0;
@@ -57,7 +58,9 @@ function registerMeditationAttractor() {
 
       if (this.clickable) {
         this.clickable.setAttribute('material', 'opacity', this.currentInfluence * this.data.maxOpacity);
-        const shouldBeClickable = this.hintInfluence > 0.1;
+        // On mobile the point is always tappable from any distance/angle;
+        // on desktop/VR it only becomes clickable when the player is near.
+        const shouldBeClickable = this.isMobile ? true : this.hintInfluence > 0.1;
         const hasClass = this.clickable.classList.contains('clickable');
         if (shouldBeClickable && !hasClass) {
           this.clickable.classList.add('clickable');
