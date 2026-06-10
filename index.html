@@ -50,8 +50,8 @@
       <!-- Native HTML5 audio element -->
       <audio id="underwaterSound" src="assets/audio/underwater-river-rapids-in-winter-ivo-vicic-1-03-01.mp3"
         preload="auto"></audio>
-      <img id="soundOnIcon" src="assets/audio/soundon.svg">
-      <img id="soundOffIcon" src="assets/audio/soundoff.svg">
+      <img id="soundOnIcon" src="assets/images/soundon.svg">
+      <img id="soundOffIcon" src="assets/images/soundoff.svg">
     </a-assets>
 
     <!-- Default lighting -->
@@ -143,7 +143,7 @@
     </a-entity>
 
     <!-- Meditation point -->
-    <a-entity id="meditation-point" position="-5.672 -5.816 -18.375" meditation-click
+    <a-entity id="meditation-point" position="4.918 -5.816 -7.547" scale="0.863 0.863 0.863" meditation-click
       meditation-attractor="triggerDistance: 25; hintDistance: 25; pulseSpeed: 0.3; pulseAmount: 0.15">
       <a-sphere class="clickable" radius="2" color="#00d4aa"
         material="transparent: true; opacity: 0; depthWrite: false"></a-sphere>
@@ -169,8 +169,9 @@
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 53.330 0" wasd-controls="acceleration: 65; fly: true"
       swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28" position-logger>
         <a-entity camera look-controls>
-        <a-entity id="soundToggleVR" position="0.8 -0.4 -1.5">
-          <a-image id="soundToggleIcon" class="clickable" src="#soundOnIcon" width="0.18" height="0.18" opacity="0.95"></a-image>
+        <a-entity id="soundToggleVR" position="0.8 -0.4 -1.5" visible="false">
+          <a-image id="soundToggleIcon" class="clickable" src="#soundOnIcon" width="0.18" height="0.18" opacity="0.95"
+            visible="false"></a-image>
         </a-entity>
         <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable; far: 100;"></a-entity>
 

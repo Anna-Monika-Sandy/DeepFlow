@@ -15,9 +15,16 @@ function registerMeditationMode() {
       this.stepIndex = 0;
       this.stepTime = 0;
       this.cycleTime = 0;
+      this.startedAt = 0;
       this.savedWasd = this.player.getAttribute('wasd-controls');
       this.hiddenEntities = [];
       this.fadeSpeed = 1.5;
+
+      // Videosphere has a visible seam — turn its clean side toward the
+      // player when meditation starts. Tune seamOffset (deg) if needed.
+      this.videosphere = document.querySelector('a-videosphere');
+      this.seamOffset = 0;
+      this.savedSphereRotY = 0;
 
       // Meditation script
       this.steps = [
@@ -37,6 +44,12 @@ function registerMeditationMode() {
 
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && this.active) this.stop();
+      });
+
+      // Tap / click anywhere exits meditation (mobile has no Escape key).
+      // Guarded so the same tap that starts the session doesn't instantly close it.
+      window.addEventListener('click', () => {
+        if (this.active && performance.now() - this.startedAt > 600) this.stop();
       });
     },
 
@@ -115,6 +128,7 @@ function registerMeditationMode() {
     start: function () {
       if (this.active) return;
       this.active = true;
+      this.startedAt = performance.now();
       this.stepIndex = 0;
       this.stepTime = 0;
       this.cycleTime = 0;
@@ -122,6 +136,20 @@ function registerMeditationMode() {
       this.player.removeAttribute('wasd-controls');
       this.panel.setAttribute('visible', true);
       this.hideWorld();
+      this.faceCleanSide();
+    },
+
+    // Rotate the videosphere so its seamless side faces the player's
+    // current view, hiding the texture seam during meditation.
+    faceCleanSide: function () {
+      if (!this.videosphere || !this.el.camera) return;
+      this.savedSphereRotY = this.videosphere.object3D.rotation.y;
+
+      const q = new THREE.Quaternion();
+      this.el.camera.getWorldQuaternion(q);
+      const camYaw = new THREE.Euler().setFromQuaternion(q, 'YXZ').y;
+
+      this.videosphere.object3D.rotation.y = camYaw + THREE.MathUtils.degToRad(this.seamOffset);
     },
 
     stop: function () {
@@ -131,6 +159,9 @@ function registerMeditationMode() {
       this.showWorld();
       this.player.setAttribute('wasd-controls', this.savedWasd);
       document.body.classList.remove('cursor-pointer');
+      if (this.videosphere) {
+        this.videosphere.object3D.rotation.y = this.savedSphereRotY;
+      }
     },
 
     tick: function (time, delta) {
