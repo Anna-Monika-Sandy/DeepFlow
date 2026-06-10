@@ -1,29 +1,37 @@
 // Entry point — registers all A-Frame components and initializes the scene.
-registerSwimBob();
-registerMarineSnow();
-registerBoundaryClamp();
-registerFishSchool();
-registerGlowyEgg();
-registerInfoPopup();
-registerMeditationClick();
-registerMeditationAttractor();
-registerMeditationMode();
-registerBreathingRing();
-registerSoundPlayer();
-initVideo();
+function initializeApp() {
+  if (!window.AFRAME) {
+    console.warn('AFRAME not available yet — deferring initialization.');
+    setTimeout(initializeApp, 100);
+    return;
+  }
 
-window.addEventListener('gamepadconnected', e => {
-  console.log('Gamepad connected:', e.gamepad);
-  alert(`Controller detected: ${e.gamepad.id}`);
-});
+  if (window.__deepflow_initialized) return; // idempotent guard
+  window.__deepflow_initialized = true;
 
-window.addEventListener('load', () => {
-  const gamepads = navigator.getGamepads?.() || [];
+  registerSwimBob();
+  registerMarineSnow();
+  registerBoundaryClamp();
+  registerFishSchool();
+  registerGlowyEgg();
+  registerInfoPopup();
+  registerMeditationClick();
+  registerMeditationAttractor();
+  registerMeditationMode();
+  registerBreathingRing();
+  registerSoundPlayer();
+  initVideo();
 
-  gamepads.forEach(gamepad => {
-    if (gamepad) {
-      console.log('Existing gamepad:', gamepad);
-      alert(`Already connected: ${gamepad.id}`);
-    }
+  window.addEventListener('gamepadconnected', e => {
+    console.log('Gamepad connected:', e.gamepad);
   });
-});
+
+  window.addEventListener('load', () => {
+    const gamepads = navigator.getGamepads?.() || [];
+    gamepads.forEach(gamepad => {
+      if (gamepad) console.log('Existing gamepad:', gamepad);
+    });
+  });
+}
+
+initializeApp();

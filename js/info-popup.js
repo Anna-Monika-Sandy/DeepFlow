@@ -1,7 +1,4 @@
 // One reusable info popup for all sea creatures.
-// Usage: <a-entity info-popup="key: orca"></a-entity>
-// Opens on `click` or on the `egg-clicked` event (from glowy-egg).
-
 const INFO_POPUP_DATA = {
   orca: {
     accent: '#00ffff',

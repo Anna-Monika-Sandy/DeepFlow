@@ -43,8 +43,7 @@ function registerGlowyEgg() {
 
       // Simple execution listeners
       this.el.addEventListener("click", (evt) => {
-        console.log("🥚 Egg component clicked!");
-        // Emits structural click up to orca-info-popup.js without editing any material colors
+        // Egg clicked — emit event for popup (debug logging removed)
         this.el.emit("egg-clicked", { target: this.el });
       });
 

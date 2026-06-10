@@ -11,7 +11,6 @@ function registerMeditationClick() {
       });
 
       this.el.addEventListener('click', () => {
-        console.log('meditation clicked');
       });
     }
   });
