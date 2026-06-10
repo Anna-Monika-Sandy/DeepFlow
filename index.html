@@ -102,9 +102,6 @@
     <a-gltf-model id="tall-seaweed" src="assets/models/tall_seaweed.glb" position="12.0 -18.5 -8.2" rotation="0 60 0"
       scale="1.7 1.7 1.7"></a-gltf-model>
 
-    <!-- Static plants and coral on the seabed -->
-    <a-gltf-model id="gardinerosis" src="assets/models/gardineroseris_planulata.glb" position="14.0 -18.8 0.5"
-      rotation="0 40 0" scale="0.35 0.35 0.35"></a-gltf-model>
     <a-gltf-model id="base-seaweed" src="assets/models/base_seaweed.glb" position="17.8 -17.65 -5.2" rotation="0 100 0"
       scale="1.3 1.3 1.3"></a-gltf-model>
     <a-gltf-model id="wiggle-seaweed" src="assets/models/wiggle_seaweed.glb" position="15.0 -18.7 -4.5"
@@ -167,7 +164,7 @@
 
     <!-- Player Rig -->
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 53.330 0" wasd-controls="acceleration: 65; fly: true"
-      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28" position-logger>
+      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
         <a-entity camera look-controls>
         <a-entity id="soundToggleVR" position="0.8 -0.4 -1.5" visible="false">
           <a-image id="soundToggleIcon" class="clickable" src="#soundOnIcon" width="0.18" height="0.18" opacity="0.95"
