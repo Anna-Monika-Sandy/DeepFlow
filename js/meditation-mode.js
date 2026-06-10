@@ -48,9 +48,13 @@ function registerMeditationMode() {
 
       // Tap / click anywhere exits meditation (mobile has no Escape key).
       // Guarded so the same tap that starts the session doesn't instantly close it.
-      window.addEventListener('click', () => {
+      // iOS Safari doesn't reliably bubble `click` over the WebGL canvas, so we
+      // also listen for `touchend`.
+      const exitOnTap = () => {
         if (this.active && performance.now() - this.startedAt > 600) this.stop();
-      });
+      };
+      window.addEventListener('click', exitOnTap);
+      window.addEventListener('touchend', exitOnTap);
     },
 
     createFadeLabel: function (el) {
