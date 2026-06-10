@@ -12,8 +12,6 @@ browser, and in VR headsets via WebXR.
 
 👉 **[Open the experience](https://deep-flow-mu.vercel.app/)**
 
-> Best experienced with headphones. On mobile, tap the goggles icon for VR mode.
-
 ## ✨ Features
 
 - **First-person exploration** — swim freely with WASD + mouse on desktop, drag-to-look on mobile, and full head tracking in VR.
@@ -29,9 +27,9 @@ browser, and in VR headsets via WebXR.
 |---|---|---|---|
 | Move | `W` `A` `S` `D` | — | — |
 | Look around | Click + drag | Drag | Move head |
-| Interact | Click | Tap | Point + trigger |
-| Start meditation | Click point / `K` | Tap point | Point + trigger |
-| Exit meditation | `Esc` / click | Tap anywhere | Point + trigger |
+| Interact | Click | Tap |
+| Start meditation | Click point / `K` | Tap point |
+| Exit meditation | `Esc` / click | Tap anywhere |
 | Toggle sound | Button (top-right) | Button | In-world button |
 
 ## 🛠️ Tech Stack
@@ -40,7 +38,6 @@ browser, and in VR headsets via WebXR.
 - **[aframe-extras](https://github.com/c-frame/aframe-extras)** — WASD movement, animation mixer, laser controls
 - **[Three.js](https://threejs.org/)** — custom particle systems (marine snow, breathing ring) via `Points` + `BufferGeometry`
 - **[gltf-transform](https://gltf-transform.dev/)** — GLB model optimization (textures → WebP), reducing model payload by ~75%
-- No build step — plain HTML, CSS, and vanilla JS loaded over CDN. Open `index.html` and go.
 
 ## 🚀 Run Locally
 
@@ -78,24 +75,15 @@ DeepFlow/
     └── images/         # UI icons
 ```
 
-Each JS file defines one A-Frame component wrapped in a `registerX()` function;
-`main.js` calls them all in order. This keeps responsibilities isolated and the
-load order explicit without a bundler.
-
 ## 👥 Team
 
 - **Monika Kolev**
 - **Sandy Shohdy**
 - **Anna Baidikova**
 
-Built as a Studio team project for the Frontend Developer program (Hyper Island).
+Built as a team project for the Frontend Developer program (Hyper Island).
 
-### Team workflow
-- Agile — tasks split into small chunks, tracked on a GitHub board
-- No direct pushes to `main` — every change goes through a feature branch
-- Pull request + review for every merge
 
 ## 🙏 Credits
 
-- 3D models from [Sketchfab](https://sketchfab.com/) (Creative Commons)
-- Underwater footage and ambient audio from stock sources (see `assets/`)
+ 3D models from [Sketchfab](https://sketchfab.com/) (Creative Commons)
