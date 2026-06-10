@@ -36,22 +36,24 @@ function registerFishSchool() {
         // Out of bounds horizontally -> turn back toward the center
         this.targetDirection.set(-pos.x, 0, -pos.z).normalize();
       } else if (this.steerTime <= 0) {
-        // Safe inside bounds -> occasionally pick a new relaxed direction
+        // Safe inside bounds -> gently nudge the CURRENT heading, not a random one.
+        // Perturbing the existing direction keeps motion smooth and natural;
+        // picking a fully random vector makes large creatures pivot sharply.
         this.targetDirection
           .set(
-            Math.random() - 0.5,
+            this.direction.x + (Math.random() - 0.5) * 0.4,
             (Math.random() - 0.5) * 0.1,
-            Math.random() - 0.5,
+            this.direction.z + (Math.random() - 0.5) * 0.4,
           )
           .normalize();
-        this.steerTime = 2 + Math.random() * 3; // Steer again in 2-5 seconds
+        this.steerTime = 3 + Math.random() * 4; // Steer again in 3-7 seconds
       }
 
       // 2. VERTICAL DEPTH SAFETY NET (Prevents fish from vanishing over time)
       if (pos.y > 2) {
-        this.targetDirection.y = -0.3; // Too high! Guide them back down
+        this.targetDirection.y = -0.3;
       } else if (pos.y < -12) {
-        this.targetDirection.y = 0.3; // Too deep! Guide them back up
+        this.targetDirection.y = 0.3; 
       }
 
       // Keep vectors uniform to stop compounding floating-point errors

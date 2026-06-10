@@ -114,7 +114,7 @@ function registerMeditationMode() {
     },
 
     hideWorld: function () {
-      const selectors = 'a-gltf-model, [marine-snow], [school-splitter], [gltf-fish-spawner], #orca-entity, #meditation-point';
+      const selectors = 'a-gltf-model, [marine-snow], [school-splitter], [gltf-fish-spawner], [glowy-egg], .gard-marker, #meditation-point';
       const all = this.el.querySelectorAll(selectors);
       all.forEach((entity) => {
         if (entity.getAttribute('visible') !== false) {
