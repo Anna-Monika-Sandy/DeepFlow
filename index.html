@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/cursor-override.css" />
+  <link rel="stylesheet" href="css/info-popup.css" />
 
   <!-- Script initialization -->
   <script src="js/swim-bob.js"></script>
@@ -19,9 +20,7 @@
   <script src="js/fish.js"></script>
   <script src="js/video.js"></script>
   <script src="js/glowy-egg.js"></script>
-  <script src="js/orca-info-popup.js"></script>
-  <script src="js/manta-info-popup.js"></script>
-  <script src="js/gardineroseris-info-popup.js"></script>
+  <script src="js/info-popup.js"></script>
   <script src="js/meditation-click.js"></script>
   <script src="js/meditation-attractor.js"></script>
   <script src="js/meditation-mode.js"></script>
@@ -74,7 +73,7 @@
     </a-gltf-model>
 
     <!-- Static plants and coral on the seabed -->
-    <a-entity id="gardineroseris" position="14.0 -18.8 0.5" rotation="0 40 0" scale="0.35 0.35 0.35" gardineroseris-info-popup>
+    <a-entity id="gardineroseris" position="14.0 -18.8 0.5" rotation="0 40 0" scale="0.35 0.35 0.35" info-popup="key: gardineroseris">
       <a-gltf-model gltf-model="assets/models/gardineroseris_planulata_compressed.glb" class="clickable"></a-gltf-model>
 
       <!-- Clickable marker positioned on top of the Gardineroseris plant -->
@@ -128,12 +127,20 @@
     <a-entity
       gltf-fish-spawner="model: #emperor-fish; count: 4; boundary: 25; minSpeed: 1.5; maxSpeed: 3.5; scale: 1.0"></a-entity>
     <a-entity
-      gltf-fish-spawner="model: #manta-ray; count: 1; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7; modelRotation: 0 0 180"></a-entity>
-    <a-entity
       gltf-fish-spawner="model: #tuna-fish; count: 3; boundary: 25; minSpeed: 1.0; maxSpeed: 2.0; scale: 0.7"></a-entity>
 
+    <!-- MANTA RAY — single clickable entity so it can open an info popup -->
+    <a-entity id="manta-entity" info-popup="key: manta" position="8 4 -6" fish-swim="speed: 1.3; boundary: 25">
+      <a-gltf-model class="clickable" src="#manta-ray" scale="0.7 0.7 0.7" rotation="0 0 180"
+        animation-mixer="clip: *; loop: repeat"></a-gltf-model>
+
+      <a-entity class="clickable" glowy-egg="glowColor: #00bfff; glowIntensity: 1.8; pulseSpeed: 1.5; scale: 2.5"
+        position="0 0.5 0">
+      </a-entity>
+    </a-entity>
+
     <!-- ORCA WITH NESTED GLOWY EGG -->
-    <a-entity id="orca-entity" orca-info-popup position="0 4 -10" fish-swim="speed: 1.5; boundary: 25">
+    <a-entity id="orca-entity" info-popup="key: orca" position="0 4 -10" fish-swim="speed: 1.5; boundary: 25">
       <a-gltf-model class="clickable" src="#orca" scale="0.1 0.1 0.1"
         animation-mixer="clip: *; loop: repeat"></a-gltf-model>
 
