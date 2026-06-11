@@ -158,7 +158,7 @@
 
     <!-- Player Rig -->
     <a-entity id="player" position="18.304 -2 17.834" rotation="0 53.330 0" movement-controls="speed: 0.4; fly: true"
-      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28">
+      swim-bob="amplitude: 0.1; frequency: 0.3" boundary-clamp="radius: 28; minY: -16; maxY: 16">
       <a-entity camera look-controls>
         <a-entity id="soundToggleVR" position="0.8 -0.4 -1.5" visible="false">
           <a-image id="soundToggleIcon" class="clickable" src="#soundOnIcon" width="0.18" height="0.18" opacity="0.95"

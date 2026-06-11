@@ -7,14 +7,17 @@
 function registerBoundaryClamp() {
   AFRAME.registerComponent('boundary-clamp', {
     schema: {
-      radius: { type: 'number', default: 47 }
+      radius: { type: 'number', default: 47 },
+      minY:   { type: 'number', default: -100 },  // floor  (sphere bottom)
+      maxY:   { type: 'number', default: 100 }    // ceiling (sphere top)
     },
 
     clamp: function () {
       const pos = this.el.object3D.position;
       const r = this.data.radius;
-      const distSq = pos.x * pos.x + pos.z * pos.z;
 
+      // Horizontal circle (X/Z)
+      const distSq = pos.x * pos.x + pos.z * pos.z;
       if (distSq > r * r) {
         // Scale X/Z back onto the circle. The angle is preserved, so pushing
         // into the wall naturally slides the player along it.
@@ -22,6 +25,10 @@ function registerBoundaryClamp() {
         pos.x *= scale;
         pos.z *= scale;
       }
+
+      // Vertical limits (Y) — keep the player inside the ellipsoid videosphere
+      if (pos.y > this.data.maxY) pos.y = this.data.maxY;
+      else if (pos.y < this.data.minY) pos.y = this.data.minY;
     },
 
     tick: function () {
