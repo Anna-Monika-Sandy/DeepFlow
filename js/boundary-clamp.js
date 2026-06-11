@@ -1,47 +1,35 @@
-// Applies circular borders to the player so they can't leave the scene area.
+// Keeps the player inside a circular area (X/Z) so they can't leave the scene.
 // Usage: boundary-clamp="radius: 28"
+//
+// The clamp runs in BOTH tick and tock: movement-controls (aframe-extras) may
+// move the rig in either phase, so clamping in both guarantees the player is
+// pulled back to the circle after the movement was applied — no escaping.
 function registerBoundaryClamp() {
   AFRAME.registerComponent('boundary-clamp', {
     schema: {
       radius: { type: 'number', default: 47 }
     },
 
-    init: function () {
-      this.prevX = this.el.object3D.position.x;
-      this.prevZ = this.el.object3D.position.z;
+    clamp: function () {
+      const pos = this.el.object3D.position;
+      const r = this.data.radius;
+      const distSq = pos.x * pos.x + pos.z * pos.z;
+
+      if (distSq > r * r) {
+        // Scale X/Z back onto the circle. The angle is preserved, so pushing
+        // into the wall naturally slides the player along it.
+        const scale = r / Math.sqrt(distSq);
+        pos.x *= scale;
+        pos.z *= scale;
+      }
     },
 
     tick: function () {
-      const pos = this.el.object3D.position;
-      const r   = this.data.radius;
+      this.clamp();
+    },
 
-      if (pos.x * pos.x + pos.z * pos.z > r * r) {
-        const dx = pos.x - this.prevX;
-        const dz = pos.z - this.prevZ;
-
-        const prevLen = Math.sqrt(this.prevX * this.prevX + this.prevZ * this.prevZ);
-        if (prevLen > 0.001) {
-          const nx = this.prevX / prevLen;
-          const nz = this.prevZ / prevLen;
-
-          const tx = -nz;
-          const tz =  nx;
-
-          const tangential = dx * tx + dz * tz;
-          pos.x = this.prevX + tx * tangential;
-          pos.z = this.prevZ + tz * tangential;
-
-          const newDistSq = pos.x * pos.x + pos.z * pos.z;
-          if (newDistSq > r * r) {
-            const scale = r / Math.sqrt(newDistSq);
-            pos.x *= scale;
-            pos.z *= scale;
-          }
-        }
-      }
-
-      this.prevX = pos.x;
-      this.prevZ = pos.z;
+    tock: function () {
+      this.clamp();
     }
   });
 }
