@@ -21,8 +21,10 @@ function registerFishSchool() {
     },
 
     tick: function (time, delta) {
-      const dt = delta / 1000;
+      // 1. Safeguard against tab-switching / heavy frame lag spikes
+      let dt = delta / 1000;
       if (dt <= 0) return;
+      if (dt > 0.1) dt = 0.1; // Caps calculation to max 100ms per frame to prevent hyper-teleportation
 
       this.time += dt;
       this.steerTime -= dt;
@@ -30,44 +32,64 @@ function registerFishSchool() {
       const pos = this.el.object3D.position;
       const r = this.data.boundary;
 
-      // 1. Horizontal Boundary Check (X and Z cylinder)
+      // 2. Horizontal Boundary Check (Cylinder radius check)
       const distSq = pos.x * pos.x + pos.z * pos.z;
-      if (distSq > r * r) {
-        // Out of bounds horizontally -> turn back toward the center
+      const currentDist = Math.sqrt(distSq);
+
+      if (currentDist > r) {
+       
         this.targetDirection.set(-pos.x, 0, -pos.z).normalize();
+
+        
+        if (currentDist > r + 1.5) {
+          pos.x = (pos.x / currentDist) * r;
+          pos.z = (pos.z / currentDist) * r;
+          this.direction.set(-pos.x, 0, -pos.z).normalize();
+        }
       } else if (this.steerTime <= 0) {
-        // Safe inside bounds -> gently nudge the CURRENT heading, not a random one.
-        // Perturbing the existing direction keeps motion smooth and natural;
-        // picking a fully random vector makes large creatures pivot sharply.
+       
         this.targetDirection
           .set(
-            this.direction.x + (Math.random() - 0.5) * 0.4,
+            Math.random() - 0.5,
             (Math.random() - 0.5) * 0.1,
-            this.direction.z + (Math.random() - 0.5) * 0.4,
+            Math.random() - 0.5,
           )
           .normalize();
-        this.steerTime = 3 + Math.random() * 4; // Steer again in 3-7 seconds
+        this.steerTime = 2 + Math.random() * 3; 
       }
 
-      // 2. VERTICAL DEPTH SAFETY NET (Prevents fish from vanishing over time)
+      // 3. Vertical Depth Safety Net & Hard Ceiling/Floor Caps
       if (pos.y > 2) {
-        this.targetDirection.y = -0.3;
+        this.targetDirection.y = -0.3; 
+        if (pos.y > 4) pos.y = 2; 
       } else if (pos.y < -12) {
         this.targetDirection.y = 0.3; 
+        if (pos.y < -14) pos.y = -12; 
       }
 
-      // Keep vectors uniform to stop compounding floating-point errors
       this.targetDirection.normalize();
 
-      // 3. Smoothly steer towards the target heading
-      this.direction.lerp(this.targetDirection, dt * 1.5).normalize();
+      const lerpAlpha = Math.min(dt * 1.5, 1.0);
+      this.direction.lerp(this.targetDirection, lerpAlpha);
 
-      // 4. Apply movement
+      if (this.direction.lengthSq() < 0.0001) {
+        this.direction.set(Math.random() - 0.5, 0.05, Math.random() - 0.5);
+      }
+      this.direction.normalize();
+
+      // 5. Apply step movement safely
       pos.addScaledVector(this.direction, this.speed * dt);
 
-      // 5. Point the 3D model toward its new position
+      // 6. Orient the 3D model look direction
       const lookTarget = new THREE.Vector3().copy(pos).add(this.direction);
       this.el.object3D.lookAt(lookTarget);
+
+      // 7. Procedural Tail Wiggle (Kept if you built compound primitive fish shapes)
+      const tail = this.el.querySelector(".fish-tail");
+      if (tail) {
+        const wiggle = Math.sin(this.time * 2.5 * Math.PI * 2) * 0.2;
+        tail.object3D.rotation.y = wiggle;
+      }
     },
   });
 
@@ -89,7 +111,6 @@ function registerFishSchool() {
         const targetIndex = Math.min(this.data.index, children.length - 1);
         const targetFish = children[targetIndex];
 
-        // Compute the 3D bounding box center while all meshes are still visible
         const box = new THREE.Box3().setFromObject(targetFish);
         const center = new THREE.Vector3();
         box.getCenter(center);
@@ -98,10 +119,8 @@ function registerFishSchool() {
           targetFish.parent.worldToLocal(center);
         }
 
-        // Reposition to local coordinates (0, 0, 0) so the fish rotates on its own center
         targetFish.position.sub(center);
 
-        // Hide every other sibling fish mesh in this particular clone
         for (let i = 0; i < children.length; i++) {
           if (i !== targetIndex) {
             children[i].visible = false;
@@ -114,12 +133,12 @@ function registerFishSchool() {
   // 3. School splitter with built-in multiplier to easily scale up separated fish quantity
   AFRAME.registerComponent("school-splitter", {
     schema: {
-      model: { type: "selector" }, // Selector pointing to #fish-school
+      model: { type: "selector" }, 
       boundary: { type: "number", default: 24 },
       minSpeed: { type: "number", default: 1.5 },
       maxSpeed: { type: "number", default: 4.0 },
       scale: { type: "number", default: 1.0 },
-      multiplier: { type: "number", default: 3 }, // Multiplies the number of separated fish clones spawned
+      multiplier: { type: "number", default: 3 }, 
     },
 
     init: function () {
@@ -130,7 +149,6 @@ function registerFishSchool() {
 
       const modelSrc = this.data.model.getAttribute("src");
 
-      // Spawn a temporary inspection model to read the internal mesh count
       const tempModel = document.createElement("a-gltf-model");
       tempModel.setAttribute("src", modelSrc);
       tempModel.setAttribute("visible", "false");
@@ -142,7 +160,6 @@ function registerFishSchool() {
         const root = model.children[0] || model;
         const fishCount = root.children.length;
 
-        // Loop using the multiplier to populate the environment with independent fish clones
         for (let m = 0; m < this.data.multiplier; m++) {
           for (let i = 0; i < fishCount; i++) {
             const fishParent = document.createElement("a-entity");
@@ -163,7 +180,6 @@ function registerFishSchool() {
               boundary: this.data.boundary,
             });
 
-            // Randomize individual sizing slightly for natural variety
             const scaleVariation = 0.8 + Math.random() * 0.4;
             const finalScale = this.data.scale * scaleVariation;
             fishParent.setAttribute("scale", {
@@ -182,7 +198,6 @@ function registerFishSchool() {
           }
         }
 
-        // Clean up the temporary structural inspector model
         tempModel.parentNode.removeChild(tempModel);
       });
 
@@ -241,18 +256,14 @@ function registerFishSchool() {
 
         fishParent.appendChild(gltfModel);
 
-        // GLOWING ORCA GLASS EGG DESIGN
         if (
           modelSrc === "assets/models/female_orca.glb" ||
           modelSrc === "#orca"
         ) {
-          // Attach the popup component to the parent so it catches clicks from both child elements
           fishParent.setAttribute("orca-info-popup", "");
 
-          // Make the main Orca body mesh responsive to hover pointers and clicks
           gltfModel.setAttribute("class", "clickable");
 
-          // Create the egg shell wrapper
           const eggShell = document.createElement("a-entity");
           eggShell.setAttribute("glowy-egg", {
             glowColor: "#00ffd5",
@@ -299,7 +310,6 @@ function registerFishSchool() {
           });
           fishParent.appendChild(interiorLight);
 
-          // Inject custom emissive material settings directly onto the orca model once loaded
           gltfModel.addEventListener("model-loaded", () => {
             const mesh3D = gltfModel.getObject3D("mesh");
             if (mesh3D) {
@@ -312,7 +322,6 @@ function registerFishSchool() {
             }
           });
         }
-        // GLOWING MANTA RAY GLASS EGG DESIGN
         if (
           modelSrc === "assets/models/manta_ray_birostris_animated.glb" ||
           modelSrc === "#manta-ray"
@@ -321,10 +330,7 @@ function registerFishSchool() {
           gltfModel.setAttribute("class", "clickable");
 
           // 2. Attach the popup component to the parent container
-          // so it listens for bubbling clicks from BOTH the body and the egg
           fishParent.setAttribute("manta-info-popup", "");
-
-          // Create the egg shell wrapper
           const eggShell = document.createElement("a-entity");
           eggShell.setAttribute("glowy-egg", {
             glowColor: "#00bfff", // Majestic deep sky blue glow
@@ -333,7 +339,6 @@ function registerFishSchool() {
             scale: 3.2,
           });
 
-          // Mark egg as interactive for raycasting pointer tracking
           eggShell.setAttribute("class", "clickable");
           eggShell.setAttribute("position", "0 0 0");
 
@@ -349,7 +354,6 @@ function registerFishSchool() {
             side: "double",
           });
 
-          // Smooth pulsing glow effect
           eggShell.setAttribute("animation", {
             property: "components.material.material.emissiveIntensity",
             from: 0.2,
@@ -362,7 +366,6 @@ function registerFishSchool() {
 
           fishParent.appendChild(eggShell);
 
-          // Internal point light to project ambient underwater blue light
           const interiorLight = document.createElement("a-entity");
           interiorLight.setAttribute("light", {
             type: "point",
@@ -378,7 +381,6 @@ function registerFishSchool() {
     },
   });
 
-  // Procedural spawner kept for compatibility
   AFRAME.registerComponent("fish-spawner", {
     schema: {
       count: { type: "number", default: 20 },
