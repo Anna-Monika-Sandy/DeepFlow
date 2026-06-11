@@ -47,15 +47,17 @@ function registerFishSchool() {
           this.direction.set(-pos.x, 0, -pos.z).normalize();
         }
       } else if (this.steerTime <= 0) {
-       
+        // Gently nudge the CURRENT heading instead of picking a fully random one.
+        // Perturbing the existing direction keeps motion smooth and natural;
+        // a random vector makes large creatures (orca, manta) pivot sharply.
         this.targetDirection
           .set(
-            Math.random() - 0.5,
+            this.direction.x + (Math.random() - 0.5) * 0.4,
             (Math.random() - 0.5) * 0.1,
-            Math.random() - 0.5,
+            this.direction.z + (Math.random() - 0.5) * 0.4,
           )
           .normalize();
-        this.steerTime = 2 + Math.random() * 3; 
+        this.steerTime = 3 + Math.random() * 4; // Steer again in 3-7 seconds
       }
 
       // 3. Vertical Depth Safety Net & Hard Ceiling/Floor Caps
