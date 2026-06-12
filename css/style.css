@@ -22,3 +22,29 @@
   width: 20px;
   height: 20px;
 }
+
+/* Meditation close button — same round × as the info popups */
+.hud-close {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  display: none;                 /* shown only during meditation (via JS) */
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(85, 200, 255, 0.6);
+  color: #0a3d5c;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.hud-close:hover {
+  transform: scale(1.1);
+}

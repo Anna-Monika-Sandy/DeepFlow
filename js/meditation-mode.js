@@ -5,7 +5,8 @@ function registerMeditationMode() {
       this.player = document.querySelector('#player');
       this.panel  = document.querySelector('#meditation-panel');
       this.ring   = this.panel.querySelector('.breathing-ring');
-      this.exitBtn = this.panel.querySelector('.exit-btn');
+      this.exitBtn = this.panel.querySelector('.exit-btn');   // 3D button (VR)
+      this.htmlClose = document.querySelector('#meditationClose'); // HTML button (flat screens)
       this.meditationPoint = document.querySelector('#meditation-point');
 
       this.instructionLabel = this.createFadeLabel(this.panel.querySelector('.instruction-text'));
@@ -28,13 +29,13 @@ function registerMeditationMode() {
 
       // Meditation script
       this.steps = [
-        { text: 'A 1-minute breathing\npractice is about to begin', dur: 4, scaleFrom: 1,   scaleTo: 1   },
-        { text: 'Get ready',                                        dur: 3, scaleFrom: 1,   scaleTo: 1   },
-        { text: 'Take a deep breath in',                            dur: 8, scaleFrom: 1,   scaleTo: 1.6 },
-        { text: 'Breathe out',                                      dur: 8, scaleFrom: 1.6, scaleTo: 1   },
-        { text: 'The meditation begins',                            dur: 3, scaleFrom: 1,   scaleTo: 1   },
-        { type: 'breathing',                                        dur: 60                              },
-        { text: 'Well done',                                        dur: 4, scaleFrom: 1,   scaleTo: 1   }
+        { text: "You're scuba diving,\ndeep beneath the waves", dur: 5,   scaleFrom: 1,   scaleTo: 1   },
+        { text: 'To find your calm,\nfollow your breath',       dur: 5,   scaleFrom: 1,   scaleTo: 1   },
+        { text: 'Breathe in slowly...',                         dur: 8,   scaleFrom: 1,   scaleTo: 1.6 },
+        { text: '...and slowly out',                            dur: 8,   scaleFrom: 1.6, scaleTo: 1   },
+        { text: "Let's begin",                                  dur: 3,   scaleFrom: 1,   scaleTo: 1   },
+        { type: 'breathing',                                    dur: 60                                },
+        { text: 'Well done',                                    dur: 4,   scaleFrom: 1,   scaleTo: 1   }
       ];
 
       this.meditationPoint.addEventListener('click', () => this.start());
@@ -42,19 +43,32 @@ function registerMeditationMode() {
       this.exitBtn.addEventListener('mouseenter', () => document.body.classList.add('cursor-pointer'));
       this.exitBtn.addEventListener('mouseleave', () => document.body.classList.remove('cursor-pointer'));
 
+      if (this.htmlClose) this.htmlClose.addEventListener('click', () => this.stop());
+
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && this.active) this.stop();
       });
 
-      // Tap / click anywhere exits meditation (mobile has no Escape key).
-      // Guarded so the same tap that starts the session doesn't instantly close it.
-      // iOS Safari doesn't reliably bubble `click` over the WebGL canvas, so we
-      // also listen for `touchend`.
-      const exitOnTap = () => {
-        if (this.active && performance.now() - this.startedAt > 600) this.stop();
-      };
-      window.addEventListener('click', exitOnTap);
-      window.addEventListener('touchend', exitOnTap);
+      // Swap between the HTML close button (flat) and the 3D one (VR) on mode change.
+      this.el.addEventListener('enter-vr', () => this.updateExitButtons());
+      this.el.addEventListener('exit-vr', () => this.updateExitButtons());
+
+      // Keep the panel fitted to the viewport (portrait phones are narrow).
+      window.addEventListener('resize', () => { if (this.active) this.fitPanel(); });
+    },
+
+    // Scale the whole panel so its widest element fits the visible width at the
+    // panel's distance. On wide screens scale stays 1; on narrow/portrait phones
+    // it shrinks so nothing overflows the edges.
+    fitPanel: function () {
+      const cam = this.el.camera;
+      if (!cam) return;
+      const distance = 2;            // panel is at z = -2 from the camera
+      const panelWidth = 1.9;        // widest element (instruction text)
+      const vFov = THREE.MathUtils.degToRad(cam.fov);
+      const visibleW = 2 * distance * Math.tan(vFov / 2) * cam.aspect;
+      const s = Math.min(1, (visibleW * 0.85) / panelWidth);
+      this.panel.object3D.scale.set(s, s, s);
     },
 
     createFadeLabel: function (el) {
@@ -137,6 +151,8 @@ function registerMeditationMode() {
       this.stepTime = 0;
       this.cycleTime = 0;
       this.resetLabels();
+      this.fitPanel();
+      this.updateExitButtons();
       this.player.removeAttribute('wasd-controls');
       this.panel.setAttribute('visible', true);
       this.hideWorld();
@@ -156,10 +172,18 @@ function registerMeditationMode() {
       this.videosphere.object3D.rotation.y = camYaw + THREE.MathUtils.degToRad(this.seamOffset);
     },
 
+    // Show the HTML × on flat screens, the 3D × in VR — only while meditating.
+    updateExitButtons: function () {
+      const vr = this.el.is('vr-mode');
+      if (this.htmlClose) this.htmlClose.style.display = (this.active && !vr) ? 'flex' : 'none';
+      if (this.exitBtn) this.exitBtn.setAttribute('visible', this.active && vr);
+    },
+
     stop: function () {
       if (!this.active) return;
       this.active = false;
       this.panel.setAttribute('visible', false);
+      this.updateExitButtons();
       this.showWorld();
       this.player.setAttribute('wasd-controls', this.savedWasd);
       document.body.classList.remove('cursor-pointer');

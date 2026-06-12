@@ -30,6 +30,7 @@
 <body>
 
   <button id="soundToggle" class="sound-button"></button>
+  <button id="meditationClose" class="hud-close" aria-label="Close meditation">&times;</button>
 
   <a-scene meditation-mode fog="type: exponential; color: #08506b; density: 0.025" background="color: #0a3d5c">
     <a-assets>
@@ -171,15 +172,17 @@
           <a-entity class="breathing-ring"
             breathing-ring="count: 100; radius: 0.26; size: 0.022; rotateSpeed: 0.3; rings: 3; ringSpacing: 0.035"></a-entity>
 
-          <a-text class="instruction-text" value="" position="0 0.65 0" align="center" width="2.2" color="#cfe7f0"
-            opacity="0" wrap-count="22"></a-text>
+          <a-text class="instruction-text" value="" position="0 0.7 0" align="center" width="1.8" color="#cfe7f0"
+            opacity="0" wrap-count="20" baseline="center"></a-text>
 
           <a-text class="phase-text" value="" position="0 0 0" align="center" width="1.6" color="#cfe7f0"
             opacity="0"></a-text>
 
-          <a-entity class="clickable exit-btn" position="0 -0.53 0">
-            <a-text value="Exit (ESC)" position="0 0 0.01" align="center" width="4" wrap-count="30"
-              color="#a0d8ec"></a-text>
+          <!-- 3D close button (×) — used in VR; hidden on flat screens (HTML button used there) -->
+          <a-entity class="clickable exit-btn" position="-0.8 0.95 0" visible="false">
+            <a-circle radius="0.09" color="#0a3d5c"
+              material="transparent: true; opacity: 0.55; side: double"></a-circle>
+            <a-text value="X" position="0 0 0.01" align="center" width="2.2" color="#cfe7f0"></a-text>
           </a-entity>
         </a-entity>
       </a-entity>
